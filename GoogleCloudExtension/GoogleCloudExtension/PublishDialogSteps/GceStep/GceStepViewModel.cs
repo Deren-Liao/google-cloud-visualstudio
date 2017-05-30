@@ -109,7 +109,7 @@ namespace GoogleCloudExtension.PublishDialogSteps.GceStep
         }
 
         /// <summary>
-        /// Whether to publish debug build
+        /// Whether to publish debug build.
         /// </summary>
         public bool UseDebugBuild
         {
@@ -118,7 +118,7 @@ namespace GoogleCloudExtension.PublishDialogSteps.GceStep
         }
 
         /// <summary>
-        /// Whether to publish debug build
+        /// Whether to attach debugger after publising.
         /// </summary>
         public bool LaunchRemoteDebugger
         {
