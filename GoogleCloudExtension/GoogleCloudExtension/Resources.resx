@@ -2411,4 +2411,12 @@
     <value>The path does not exist</value>
     <comment>Error message when the local path does not exists</comment>
   </data>
+  <data name="CsrCreateMirrorAfterPublish" xml:space="preserve">
+    <value>Goto Google CSR page to mirror repo from GitHub or Gitbuckets (git only)</value>
+    <comment>Caption for checkbox that asks to goto CSR page after repo is created</comment>
+  </data>
+  <data name="CsrCreateRepoNameValidationMessage" xml:space="preserve">
+    <value>Repository names can only contain alphanumeric characters, underscores or dashes</value>
+    <comment>Repo name validation error message</comment>
+  </data>
 </root>

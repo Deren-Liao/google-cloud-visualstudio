@@ -2365,6 +2365,24 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Goto Google CSR page to mirror repo from GitHub or Gitbuckets (git only).
+        /// </summary>
+        public static string CsrCreateMirrorAfterPublish {
+            get {
+                return ResourceManager.GetString("CsrCreateMirrorAfterPublish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Repository names can only contain alphanumeric characters, underscores or dashes.
+        /// </summary>
+        public static string CsrCreateRepoNameValidationMessage {
+            get {
+                return ResourceManager.GetString("CsrCreateRepoNameValidationMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fully-featured private Git repositories hosted on Cloud Platform on highly-replicated backend storage systems distributed geographically across multiple data centers and run on infrastructure proven for reliability..
         /// </summary>
         public static string CsrDescription {

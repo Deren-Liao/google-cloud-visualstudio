@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="GoogleCloudExtension.CloudSourceRepositories.CsrCloneWindowContent"
+﻿<UserControl x:Class="GoogleCloudExtension.CloudSourceRepositories.CsrCreateWindowContent"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,12 +6,11 @@
              xmlns:local="clr-namespace:GoogleCloudExtension.CloudSourceRepositories"
              xmlns:theming="clr-namespace:GoogleCloudExtension.Theming"
              xmlns:ctrl="clr-namespace:GoogleCloudExtension.Controls"
-             xmlns:utils="clr-namespace:GoogleCloudExtension.Utils;assembly=GoogleCloudExtension.Utils"
              xmlns:ext="clr-namespace:GoogleCloudExtension"
+             xmlns:utils="clr-namespace:GoogleCloudExtension.Utils;assembly=GoogleCloudExtension.Utils"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type=local:CsrCloneWindowViewModel}"             
-             d:DesignHeight="300" d:DesignWidth="280"
-             Width="280">
+             d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type=local:CsrCreateWindowViewModel}"
+             d:DesignHeight="300" d:DesignWidth="300">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -31,10 +30,9 @@
         <theming:CommonDialogWindowBaseContent.Buttons>
             <theming:DialogButtonInfo Caption="{x:Static ext:Resources.UiOkButtonCaption}"
                                       Command="{Binding OkCommand}"
-                                      IsDefault="True" />
+                                      IsDefault="True"/>
             <theming:DialogButtonInfo Caption="{x:Static ext:Resources.UiCancelButtonCaption}" IsCancel="True" />
         </theming:CommonDialogWindowBaseContent.Buttons>
-
 
         <StackPanel IsEnabled="{Binding IsReady}">
 
@@ -53,17 +51,15 @@
 
             <Label 
                 Content="{x:Static ext:Resources.CsrRepositorySelectionLabel}"
-                Target="{Binding ElementName=RepositoryComboBox}"
+                Target="{Binding ElementName=RepositoryNameTextBox}"
                 Style="{StaticResource CommonLabelStyle}"
                 Margin="0,6,0,0"/>
 
-            <ComboBox 
-                x:Name="RepositoryComboBox"
-                ItemsSource="{Binding Repositories}"
-                SelectedItem="{Binding SelectedRepository, Mode=TwoWay}"
-                IsSynchronizedWithCurrentItem="True"
-                DisplayMemberPath="Name" 
-                IsTextSearchEnabled="True" />
+            <TextBox 
+                x:Name="RepositoryNameTextBox"
+                Text="{Binding RepositoryName, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, Mode=TwoWay}"
+                Style="{StaticResource CommonTextBoxStyle}"
+                Margin="0,0,6,0" />
 
             <Label 
                 Content="{x:Static ext:Resources.CsrCloneLocalPathLabel}"
@@ -93,6 +89,17 @@
 
             </Grid>
 
+
+            <CheckBox 
+                Margin="0,6,0,0"
+                VerticalAlignment="Center"
+                IsChecked="{Binding GotoCsrWebPage}" >
+                <TextBlock Text="{x:Static ext:Resources.CsrCreateMirrorAfterPublish}"
+                            TextWrapping="NoWrap"
+                            TextTrimming="CharacterEllipsis"
+                            Style="{StaticResource CommonTextStyle}"/>
+            </CheckBox>
+
             <ctrl:DotsProgressIndicator 
                 Margin="0,12,0,0" 
                 Width="60" 
@@ -101,5 +108,5 @@
 
         </StackPanel>
     </theming:CommonDialogWindowBaseContent>
-
+    
 </UserControl>
