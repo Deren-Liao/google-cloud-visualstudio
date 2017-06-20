@@ -111,7 +111,7 @@ namespace GoogleCloudExtension.GitUtils
         {
             try
             {
-                using (var key = OpenGitKey(gitKeyPath, "epositories", writable: true))
+                using (var key = OpenGitKey(gitKeyPath, "Repositories", writable: true))
                 {
                     if (key == null)
                     {
