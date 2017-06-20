@@ -166,7 +166,27 @@ namespace GoogleCloudExtension.CloudSourceRepositories
 
         private void SetCurrentRepo(string localPath)
         {
-            // TODO: Add in next PR.
+            string guid = Guid.NewGuid().ToString();
+            try
+            {
+                ShellUtils.CreateEmptySolution(localPath, guid);
+            }
+            finally
+            {
+                try
+                {
+                    // Clean up the dummy `.vs` directory.
+                    string tmpPath = Path.Combine(localPath, ".vs", guid);
+                    if (Directory.Exists(tmpPath))
+                    {
+                        Directory.Delete(tmpPath, recursive: true);
+                    }
+                }
+                catch (Exception ex) when (
+                    ex is IOException ||
+                    ex is UnauthorizedAccessException)
+                { }
+            }
         }
 
 
