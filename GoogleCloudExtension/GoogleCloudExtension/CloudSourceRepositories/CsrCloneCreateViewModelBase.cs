@@ -115,34 +115,6 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             ErrorHandlerUtils.HandleAsyncExceptions(() => ExecuteAsync(InitializeAsync));
         }
 
-        //private async Task CloneAsync()
-        //{
-        //    // If OkCommand is enabled, SelectedRepository and LocalPath is valid
-        //    string destPath = Path.Combine(LocalPath, CsrUtils.GetRepoName(SelectedRepository));
-
-        //    if (!CsrGitUtils.StoreCredential(
-        //        SelectedRepository.Url,
-        //        CredentialsStore.Default.CurrentAccount.RefreshToken,
-        //        useHttpPath: true))
-        //    {
-        //        UserPromptUtils.ErrorPrompt(
-        //            message: Resources.CsrCloneFailedMessage,
-        //            title: Resources.uiDefaultPromptTitle);
-        //        return;
-        //    }
-
-        //    GitRepository localRepo = await CsrGitUtils.Clone(SelectedRepository.Url, destPath);
-        //    if (localRepo == null)
-        //    {
-        //        UserPromptUtils.ErrorPrompt(
-        //            message: Resources.CsrCloneFailedToSetCredentialMessage,
-        //            title: Resources.uiDefaultPromptTitle);
-        //        return;
-        //    }
-        //    Result = new RepoItemViewModel(SelectedRepository, localRepo.Root);
-        //    _owner.Close();
-        //}
-
         private void PickFoloder()
         {
             using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
@@ -263,6 +235,9 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                     title: Resources.UiDefaultPromptTitle);
                 return;
             }
+
+            VsGitData.AddLocalRepositories(GoogleCloudExtensionPackage.VsVersion, RepoName, destPath);
+
             Result = new RepoItemViewModel(CloudRepo, localRepo.Root);
             _owner.Close();
         }
