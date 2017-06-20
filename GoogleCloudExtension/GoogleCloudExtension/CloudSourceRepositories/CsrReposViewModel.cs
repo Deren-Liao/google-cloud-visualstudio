@@ -324,6 +324,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                         var serviceProvider = ShellUtils.GetGloblalServiceProvider();
                         var solution = serviceProvider.GetService(typeof(SVsSolution)) as IVsSolution;
                         solution?.CreateNewProjectViaDlg(null, null, 0);
+                        _teamExplorer.ShowHomeSection();
                     }));
             }
         }
