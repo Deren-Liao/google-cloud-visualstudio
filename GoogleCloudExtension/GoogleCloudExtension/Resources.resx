@@ -2355,11 +2355,11 @@
     <value>Disconnect</value>
     <comment>The Disconnect link button caption</comment>
   </data>
-  <data name="CsrRepoLocalPathLabel" xml:space="preserve">
+  <data name="CsrContextMenuLocalPathLabel" xml:space="preserve">
     <value>Local Path</value>
     <comment>Repository local path label</comment>
   </data>
-  <data name="CsrRepoNameLabel" xml:space="preserve">
+  <data name="CsrContextMenuRepoNameLabel" xml:space="preserve">
     <value>Repo Name</value>
     <comment>Repository name label</comment>
   </data>
@@ -2416,7 +2416,19 @@
     <comment>Caption for checkbox that asks to goto CSR page after repo is created</comment>
   </data>
   <data name="CsrCreateRepoNameValidationMessage" xml:space="preserve">
-    <value>Repository names can only contain alphanumeric characters, underscores or dashes</value>
+    <value>Supported characters are A-Z, a-z, 0-9, -, and _</value>
     <comment>Repo name validation error message</comment>
+  </data>
+  <data name="CsrCreateRepoNameTextBoxLebel" xml:space="preserve">
+    <value>Repository name</value>
+    <comment>Label to repository name input text box</comment>
+  </data>
+  <data name="CsrRepoNameAlreadyExitstsMessage" xml:space="preserve">
+    <value>The repository name already exists</value>
+    <comment>Validation message tells that the input repository name already exists.</comment>
+  </data>
+  <data name="CsrRepoNameStartWithMessageFormat" xml:space="preserve">
+    <value>Repo name must start with A-Z, a-z, 0-9 or _</value>
+    <comment>Repository name first charactor validation message.</comment>
   </data>
 </root>

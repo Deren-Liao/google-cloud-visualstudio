@@ -50,6 +50,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DeployExtension>False</DeployExtension>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Accounts\CredentialsStore.cs" />
     <Compile Include="Accounts\CredentialsStoreException.cs" />
@@ -176,6 +179,7 @@
       <DependentUpon>CsrCloneWindowContent.xaml</DependentUpon>
     </Compile>
     <Compile Include="CloudSourceRepositories\CsrCloneWindowViewModel.cs" />
+    <Compile Include="CloudSourceRepositories\CsrCloneCreateViewModelBase.cs" />
     <Compile Include="CloudSourceRepositories\CsrCreateWindow.cs" />
     <Compile Include="CloudSourceRepositories\CsrCreateWindowContent.xaml.cs">
       <DependentUpon>CsrCreateWindowContent.xaml</DependentUpon>

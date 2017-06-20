@@ -9,7 +9,7 @@
              xmlns:utils="clr-namespace:GoogleCloudExtension.Utils;assembly=GoogleCloudExtension.Utils"
              xmlns:ext="clr-namespace:GoogleCloudExtension"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type=local:CsrCloneWindowViewModel}"             
+             d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type=local:CsrCloneCreateViewModelBase}"             
              d:DesignHeight="300" d:DesignWidth="280"
              Width="280">
 

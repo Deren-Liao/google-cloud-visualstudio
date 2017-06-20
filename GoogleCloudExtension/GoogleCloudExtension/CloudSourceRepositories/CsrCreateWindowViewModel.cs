@@ -16,7 +16,9 @@ using Google.Apis.CloudResourceManager.v1.Data;
 using Google.Apis.CloudSourceRepositories.v1.Data;
 using GoogleCloudExtension.Accounts;
 using GoogleCloudExtension.GitUtils;
+using GoogleCloudExtension.Theming;
 using GoogleCloudExtension.Utils;
+using GoogleCloudExtension.Utils.Validation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,22 +27,18 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Controls;
 
 namespace GoogleCloudExtension.CloudSourceRepositories
 {
     /// <summary>
     /// View model for user control CsrCreateWindowContent.xaml.
     /// </summary>
-    public class CsrCreateWindowViewModel : ViewModelBase
+    public class CsrCreateWindowViewModel : CsrCloneCreateViewModelBase
     {
-        private CsrCreateWindow _owner;
-
-        private string _localPath;
-        private IEnumerable<Project> _projects;
-        private Project _selectedProject;
-        private bool _isReady = true;
         private string _repoName;
         private bool _gotoCsrWebPage = true;
+        private IList<Repo> _repositories;
 
         public bool GotoCsrWebPage
         {
@@ -51,135 +49,100 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         public string RepositoryName
         {
             get { return _repoName; }
-            set { SetValueAndRaise(ref _repoName, value); }
+            set
+            {
+                SetValueAndRaise(ref _repoName, value);
+                ValidateInputs();
+            }
         }
 
-        public IEnumerable<Project> Projects
+        protected override string RepoName => RepositoryName;
+
+        public override ProtectedCommand OkCommand { get; }
+
+        public int REPO_NAME_LEN => 128;
+
+        public CsrCreateWindowViewModel(CommonDialogWindowBase owner) : base(owner)
         {
-            get { return _projects; }
-            private set { SetValueAndRaise(ref _projects, value); }
+            OkCommand = new ProtectedCommand(taskHandler: () => ExecuteAsync(CreateAsync), canExecuteCommand: false);
         }
 
-        public Project SelectedProject
+        protected override async Task ListRepoAsync()
         {
-            get { return _selectedProject; }
-            set { SetValueAndRaise(ref _selectedProject, value); }
+            Debug.WriteLine("ListRepoAsync");
+            if (SelectedProject == null)
+            {
+                return;
+            }
+
+            _repositories = await CsrUtils.GetCloudReposAsync(SelectedProject.ProjectId);
+            return;
         }
 
-        public string LocalPath
+        private async Task CreateAsync()
         {
-            get { return _localPath; }
-            set { SetValueAndRaise(ref _localPath, value); }
-        }
-
-        public bool IsReady
-        {
-            get { return _isReady; }
-            set { SetValueAndRaise(ref _isReady, value); }
-        }
-
-        public ProtectedCommand PickFolderCommand { get; }
-
-        public ProtectedCommand OkCommand { get; }
-
-        /// <summary>
-        /// Final cloned repository
-        /// </summary>
-        public RepoItemViewModel Result { get; private set; }
-
-        public CsrCreateWindowViewModel(CsrCreateWindow owner)
-        {
-            _owner = owner.ThrowIfNull(nameof(owner));
-            PickFolderCommand = new ProtectedCommand(PickFoloder);
-            OkCommand = new ProtectedCommand( 
-                () => ErrorHandlerUtils.HandleAsyncExceptions(
-                    () =>ExecuteAsync(Create))
-                );
-            ErrorHandlerUtils.HandleAsyncExceptions(
-                    () => ExecuteAsync(Init));
-        }
-
-        private async Task Create()
-        {
-            await ValidateInput();
-
             var csrDatasource = CsrUtils.CreateCsrDataSource(SelectedProject.ProjectId);
-            var repo = await csrDatasource.CreateRepoAsync(RepositoryName);
+            var cloudRepo = await csrDatasource.CreateRepoAsync(RepositoryName);
 
-            GitRepository gitCommand = await CsrGitUtils.Clone(repo.Url, LocalPath);
-
-            Result = new RepoItemViewModel(repo, gitCommand);
-            _owner.Close();
+            await CloneAsync(cloudRepo);
         }
 
-        private async Task ValidateInput()
+        protected override void ValidateRepoName()
         {
-            // TODO: validate data
-            if (!(await ValidateRepoName(RepositoryName)))
-            {
-                UserPromptUtils.ErrorPrompt("Invalid repo name", Resources.uiDefaultPromptTitle);
-                return;
-            }
-
-            if (String.IsNullOrWhiteSpace(RepositoryName) || String.IsNullOrWhiteSpace(LocalPath)
-                || Directory.Exists(LocalPath))
-            {
-                UserPromptUtils.ErrorPrompt(message: "Invalid input", title: Resources.uiDefaultPromptTitle);
-                return;
-            }
+            SetValidationResults(ValidateRepoName(RepositoryName), nameof(RepositoryName));
         }
 
-        private void PickFoloder()
+        private static readonly HashSet<char> REPO_NAME_FIRST_CHAR = new HashSet<char>();
+        //    CharMatcher.inRange('A', 'Z')
+        //        .or(CharMatcher.inRange('a', 'z'))
+        //        .or(CharMatcher.inRange('0', '9'))
+        //        .or(CharMatcher.is('_'));
+        private static HashSet<char> REPO_NAME_MATCHER;
+
+        private static void AddCharRange(char low, char high)
         {
-            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            for (char ch = low; ch <= high; ++ch)
             {
-                dialog.Description = "Clone to ";
-                dialog.SelectedPath = LocalPath;
-                dialog.ShowNewFolderButton = true;
-                var result = dialog.ShowDialog();
-                if (result == System.Windows.Forms.DialogResult.OK)
-                {
-                    LocalPath = dialog.SelectedPath;
-                }
+                REPO_NAME_FIRST_CHAR.Add(ch);
             }
         }
 
-        private async Task ExecuteAsync(Func<Task> task)
+        private IEnumerable<ValidationResult> ValidateRepoName(string name)
         {
-            IsReady = false;
-            try
+            if (!REPO_NAME_FIRST_CHAR.Any())
             {
-                await task();
+                AddCharRange('a', 'z');
+                AddCharRange('A', 'Z');
+                AddCharRange('0', '9');
+                REPO_NAME_FIRST_CHAR.Add('_');
+                REPO_NAME_MATCHER = new HashSet<char>(REPO_NAME_FIRST_CHAR);
+                REPO_NAME_MATCHER.Add('-');
             }
-            finally
+
+            if (String.IsNullOrWhiteSpace(name))
             {
-                IsReady = true;
+                yield return StringValidationResult.FromResource(
+                    nameof(Resources.ValdiationNotEmptyMessage), 
+                    Resources.CsrCreateRepoNameTextBoxLebel);
+                yield break;
             }
-        }
 
-        private async Task<bool> ValidateRepoName(string name)
-        {
-            // TODO: Validate name using Regex.
-
-            // TODO: use lazy that caches repos list
-            var repos = await CsrUtils.GetCloudReposAsync(SelectedProject);
-            return !repos.Any(x => string.Compare(name, x.Name, StringComparison.OrdinalIgnoreCase) == 0);
-        }
-
-        private async Task Init()
-        {
-            Debug.WriteLine("Init");
-            Projects = await CsrUtils.GetProjectsAsync();
-            if (Projects?.Any() ?? false)
-            {
-                SelectedProject = Projects.FirstOrDefault();
+            if (!REPO_NAME_FIRST_CHAR.Contains(name[0]))
+            { 
+                yield return StringValidationResult.FromResource(nameof(Resources.CsrRepoNameStartWithMessageFormat), name);
+                yield break;
             }
-            else
+
+            if (name.Skip(1).Any(x => !REPO_NAME_MATCHER.Contains(x)))
             {
-                UserPromptUtils.ErrorPrompt(
-                    message: "No any project is found",
-                    title: "Google Cloud Source Repositories");
-                _owner.Close();
+                yield return StringValidationResult.FromResource(nameof(Resources.CsrCreateRepoNameValidationMessage), name);
+                yield break;
+            }
+
+            if (_repositories?.Any(x => string.Compare(name, x.Name, StringComparison.OrdinalIgnoreCase) == 0) ?? false)
+            {
+                yield return StringValidationResult.FromResource(nameof(Resources.CsrRepoNameAlreadyExitstsMessage));
+                yield break;
             }
         }
     }

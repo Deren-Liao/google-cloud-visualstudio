@@ -37,7 +37,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// </summary>
         /// <param name="cloudRepo">Repository object</param>
         /// <returns>Repository name</returns>
-        public static string GetRepoName(Repo cloudRepo) => cloudRepo?.Name?.Split('/').LastOrDefault();
+        public static string GetRealRepoName(this Repo cloudRepo) => cloudRepo?.Name?.Split('/').LastOrDefault();
 
         /// <summary>
         /// Parse the repository url and get the project name portion

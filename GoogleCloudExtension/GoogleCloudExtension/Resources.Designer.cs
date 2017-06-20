@@ -2356,6 +2356,24 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Local Path.
+        /// </summary>
+        public static string CsrContextMenuLocalPathLabel {
+            get {
+                return ResourceManager.GetString("CsrContextMenuLocalPathLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Repo Name.
+        /// </summary>
+        public static string CsrContextMenuRepoNameLabel {
+            get {
+                return ResourceManager.GetString("CsrContextMenuRepoNameLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create.
         /// </summary>
         public static string CsrCreateLinkButtonCaption {
@@ -2374,7 +2392,16 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Repository names can only contain alphanumeric characters, underscores or dashes.
+        ///   Looks up a localized string similar to Repository name.
+        /// </summary>
+        public static string CsrCreateRepoNameTextBoxLebel {
+            get {
+                return ResourceManager.GetString("CsrCreateRepoNameTextBoxLebel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Supported characters are A-Z, a-z, 0-9, -, and _.
         /// </summary>
         public static string CsrCreateRepoNameValidationMessage {
             get {
@@ -2410,20 +2437,20 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Local Path.
+        ///   Looks up a localized string similar to The repository name already exists.
         /// </summary>
-        public static string CsrRepoLocalPathLabel {
+        public static string CsrRepoNameAlreadyExitstsMessage {
             get {
-                return ResourceManager.GetString("CsrRepoLocalPathLabel", resourceCulture);
+                return ResourceManager.GetString("CsrRepoNameAlreadyExitstsMessage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Repo Name.
+        ///   Looks up a localized string similar to Repo name must start with A-Z, a-z, 0-9 or _.
         /// </summary>
-        public static string CsrRepoNameLabel {
+        public static string CsrRepoNameStartWithMessageFormat {
             get {
-                return ResourceManager.GetString("CsrRepoNameLabel", resourceCulture);
+                return ResourceManager.GetString("CsrRepoNameStartWithMessageFormat", resourceCulture);
             }
         }
         

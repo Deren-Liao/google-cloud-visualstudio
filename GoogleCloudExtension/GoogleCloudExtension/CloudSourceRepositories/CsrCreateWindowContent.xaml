@@ -50,7 +50,7 @@
                 IsTextSearchEnabled="True" />
 
             <Label 
-                Content="{x:Static ext:Resources.CsrRepositorySelectionLabel}"
+                Content="{x:Static ext:Resources.CsrCreateRepoNameTextBoxLebel}"
                 Target="{Binding ElementName=RepositoryNameTextBox}"
                 Style="{StaticResource CommonLabelStyle}"
                 Margin="0,6,0,0"/>
@@ -59,6 +59,7 @@
                 x:Name="RepositoryNameTextBox"
                 Text="{Binding RepositoryName, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, Mode=TwoWay}"
                 Style="{StaticResource CommonTextBoxStyle}"
+                MaxLength="{Binding REPO_NAME_LEN}"
                 Margin="0,0,6,0" />
 
             <Label 
