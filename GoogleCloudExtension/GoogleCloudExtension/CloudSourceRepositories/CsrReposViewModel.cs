@@ -53,7 +53,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// <summary>
         /// Gets the current active Repo
         /// </summary>
-        static public RepoItemViewModel ActiveRepo
+        public static RepoItemViewModel ActiveRepo
         {
             get { return s_activeRepo; }
             set
@@ -280,19 +280,9 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             var repos = VsGitData.GetLocalRepositories(GoogleCloudExtensionPackage.VsVersion);
             if (repos != null)
             {
-                // Not using Linq because it's tricky to use await inside Linq.
-                foreach (var path in repos)
-                {
-                    if (String.IsNullOrWhiteSpace(path))
-                    {
-                        continue;
-                    }
-                    var git = await GitRepository.GetGitCommandWrapperForPathAsync(path);
-                    if (git != null)
-                    {
-                        localRepos.Add(git);
-                    }
-                }
+                var localRepoTasks = repos.Where(r => !string.IsNullOrWhiteSpace(r))
+                        .Select(GitRepository.GetGitCommandWrapperForPathAsync);
+                localRepos.AddRange((await Task.WhenAll(localRepoTasks)).Where(r => r != null));
             }
             return localRepos;
         }

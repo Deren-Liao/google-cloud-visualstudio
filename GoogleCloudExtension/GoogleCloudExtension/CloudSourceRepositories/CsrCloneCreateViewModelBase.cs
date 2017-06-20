@@ -193,7 +193,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             {
                 UserPromptUtils.ErrorPrompt(
                     message: Resources.CsrCloneNoProject,
-                    title: Resources.uiDefaultPromptTitle);
+                    title: Resources.UiDefaultPromptTitle);
                 _owner.Close();
             }
         }
@@ -251,7 +251,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             {
                 UserPromptUtils.ErrorPrompt(
                     message: Resources.CsrCloneFailedMessage,
-                    title: Resources.uiDefaultPromptTitle);
+                    title: Resources.UiDefaultPromptTitle);
                 return;
             }
 
@@ -260,7 +260,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             {
                 UserPromptUtils.ErrorPrompt(
                     message: Resources.CsrCloneFailedToSetCredentialMessage,
-                    title: Resources.uiDefaultPromptTitle);
+                    title: Resources.UiDefaultPromptTitle);
                 return;
             }
             Result = new RepoItemViewModel(CloudRepo, localRepo.Root);
