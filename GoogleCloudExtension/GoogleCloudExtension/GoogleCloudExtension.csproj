@@ -200,6 +200,10 @@
       <DependentUpon>CsrCreateWindowContent.xaml</DependentUpon>
     </Compile>
     <Compile Include="CloudSourceRepositories\CsrCreateWindowViewModel.cs" />
+    <Compile Include="CloudSourceRepositories\CsrGitSetupContent.xaml.cs">
+      <DependentUpon>CsrGitSetupContent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CloudSourceRepositories\CsrGitSetupViewModel.cs" />
     <Compile Include="CloudSourceRepositories\CsrUtils.cs" />
     <Compile Include="TemplateWizards\Dialogs\ProjectIdDialog\IPickProjectIdWindow.cs" />
     <Compile Include="Utils\DataSourceFactories.cs" />
@@ -616,7 +620,6 @@
     <Resource Include="GcsFileBrowser\Resources\create_new_folder.png" />
     <Resource Include="GcsFileBrowser\Resources\delete_forever.png" />
     <Resource Include="GcsFileBrowser\Resources\file_upload.png" />
-    <Resource Include="CloudSourceRepositories\Resources\cloud-source-repositories.png" />
     <Content Include="Licenses.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -945,6 +948,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CloudSourceRepositories\CsrSectionStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CloudSourceRepositories\CsrGitSetupContent.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

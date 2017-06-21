@@ -34,14 +34,16 @@ namespace GoogleCloudExtension.CloudSourceRepositories
     {
         /// Sometimes, the view and view model is recreated by Team Explorer.
         /// This is to preserve the states when a new user control is created.
-        private static bool s_isConnected = false;
+        private static bool s_isConnected;
         private static string s_currentAccount;
-        private static bool s_gitInited = false;
+        private static bool s_gitInited;
 
+        private ITeamExplorerUtils _teamExplorerService;
         private readonly CsrReposContent _reposContent = new CsrReposContent();
         private readonly CsrUnconnectedContent _unconnectedContent = new CsrUnconnectedContent();
         private CsrReposViewModel _reposViewModel;
         private CsrUnconnectedViewModel _unconnectedViewModel;
+        private CsrGitSetupViewModel _gitSetupViewModel;
         private ContentControl _content;
         private EventHandler _accountChangedHandler;
 
@@ -95,31 +97,11 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             }
         }
 
-        #region implement interface ISectionViewModel
-
-        /// <summary>
-        /// Implicit implementation to ISectionViewModel.Refresh. 
-        /// Using implicit declaration so that it can be accessed by 'this' object too.
-        /// </summary>
-        public void Refresh()
-        {
-            Debug.WriteLine("CsrSectionControlViewModel.Refresh");
-            if (CredentialsStore.Default.CurrentAccount == null)
-            {
-                Disconnect();
-            }
-            else if (s_isConnected)
-            {
-                s_currentAccount = CredentialsStore.Default.CurrentAccount?.AccountName;
-                _reposViewModel.Refresh();
-            }
-        }
-
-        void ISectionViewModel.Initialize(ITeamExplorerUtils teamExplorerService)
+        public void ContinueInitialize()
         {
             Debug.WriteLine("CsrSectionControlViewModel Initialize");
-            teamExplorerService.ThrowIfNull(nameof(teamExplorerService));
-            _reposViewModel = new CsrReposViewModel(this, teamExplorerService);
+            
+            _reposViewModel = new CsrReposViewModel(this, _teamExplorerService);
             _unconnectedViewModel = new CsrUnconnectedViewModel(this);
             _reposContent.DataContext = _reposViewModel;
             _unconnectedContent.DataContext = _unconnectedViewModel;
@@ -147,10 +129,69 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             }
         }
 
+        #region implement interface ISectionViewModel
+
+        /// <summary>
+        /// Implicit implementation to ISectionViewModel.Refresh. 
+        /// Using implicit declaration so that it can be accessed by 'this' object too.
+        /// </summary>
+        public void Refresh()
+        {
+            if (Content?.DataContext != null && Content.DataContext is CsrGitSetupViewModel)
+            {
+                if (_gitSetupViewModel.TestCommand.CanExecute(null))
+                {
+                    _gitSetupViewModel.TestCommand.Execute(null);
+                }
+                return;
+            }
+
+            Debug.WriteLine("CsrSectionControlViewModel.Refresh");
+            if (CredentialsStore.Default.CurrentAccount == null)
+            {
+                Disconnect();
+            }
+            else if (s_isConnected)
+            {
+                s_currentAccount = CredentialsStore.Default.CurrentAccount?.AccountName;
+                _reposViewModel.Refresh();
+            }
+        }
+
+        void ISectionViewModel.Initialize(ITeamExplorerUtils teamExplorerService)
+        {
+            _teamExplorerService = teamExplorerService.ThrowIfNull(nameof(teamExplorerService));
+            Action continueInit = () =>
+            {
+
+            };
+
+            if (!CsrGitSetupViewModel.GitInstallationVerified)
+            {
+                ErrorHandlerUtils.HandleAsyncExceptions(CheckInstallation);
+            }
+        }
+
+        private async Task CheckInstallation()
+        {
+            await CsrGitSetupViewModel.CheckInstallation();
+            if (!CsrGitSetupViewModel.GitInstallationVerified)
+            {
+                _gitSetupViewModel = new CsrGitSetupViewModel(this);
+                CsrGitSetupContent content = new CsrGitSetupContent();
+                content.DataContext = _gitSetupViewModel;
+                Content = content;
+            }
+            else
+            {
+                ContinueInitialize();
+            }
+        }
+
         void ISectionViewModel.UpdateActiveRepo(string newRepoLocalPath)
         {
             Debug.WriteLine($"CsrSectionControlViewModel.UpdateActiveRepo {newRepoLocalPath}");
-            _reposViewModel.SetActiveRepo(newRepoLocalPath);
+            _reposViewModel?.SetActiveRepo(newRepoLocalPath);
         }
 
         void ISectionViewModel.Cleanup()
@@ -180,7 +221,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             Refresh();
         }
 
-        private async Task<bool> InitializeGit()
+        private static async Task<bool> InitializeGit()
         {
             if (s_gitInited)
             {
@@ -197,7 +238,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             return s_gitInited;
         }
 
-        private bool SetGitCredential()
+        private static bool SetGitCredential()
         {
             if (CredentialsStore.Default.CurrentAccount != null)
             {

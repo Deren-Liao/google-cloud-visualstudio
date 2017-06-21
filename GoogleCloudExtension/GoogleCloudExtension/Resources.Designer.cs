@@ -3634,6 +3634,15 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Git Credential Manager for Windows (git-credeitnal-manager) is not installed correctly.
+        /// </summary>
+        public static string GitUtilsGitCredentialManagerNotInstalledMessage {
+            get {
+                return ResourceManager.GetString("GitUtilsGitCredentialManagerNotInstalledMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Install Git for Windows.
         /// </summary>
         public static string GitUtilsGitInstallLinkCaption {

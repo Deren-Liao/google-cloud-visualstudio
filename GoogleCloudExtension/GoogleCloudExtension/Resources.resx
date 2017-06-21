@@ -2715,4 +2715,8 @@
     <value>Repo name must start with A-Z, a-z, 0-9 or _</value>
     <comment>Repository name first charactor validation message.</comment>
   </data>
+  <data name="GitUtilsGitCredentialManagerNotInstalledMessage" xml:space="preserve">
+    <value>Git Credential Manager for Windows (git-credeitnal-manager) is not installed correctly</value>
+    <comment>git crendential-manager is not found</comment>
+  </data>
 </root>
