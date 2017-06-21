@@ -96,7 +96,7 @@
                             Stretch="Uniform"
                             Width="16"
                             Height="16"
-                            Source="{mp:ImageResource CloudSourceRepositories/Resources/cloud-source-repositories.png}" />
+                            Source="{mp:ImageResource Theming/Resources/logo_cloud.png}" />
                         
                         <TextBlock       
                             Grid.Column="1" 
