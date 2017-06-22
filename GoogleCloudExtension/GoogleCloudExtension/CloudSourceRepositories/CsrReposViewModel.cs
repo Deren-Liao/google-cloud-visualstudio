@@ -266,7 +266,17 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             if (!projectReposMap.TryGetValue(projectId, out cloudRepos))
             {
 
-                cloudRepos = await CsrUtils.GetCloudReposAsync(projectId);
+                try
+                {
+                    cloudRepos = await CsrUtils.GetCloudReposAsync(projectId);
+                }
+                catch (DataSourceException)
+                {
+                    _teamExplorer.ShowMessage(
+                        $"Failed to get repos for GCP project {projectId}",
+                        null);
+                    cloudRepos = null;
+                }
                 projectReposMap.Add(projectId, cloudRepos);
             }
 

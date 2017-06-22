@@ -64,7 +64,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// <summary>
         /// Display the unconnected view
         /// </summary>
-        public void Disconnect()
+        public void ShowSignInView()
         {
             Content = _unconnectedContent;
             s_currentAccount = null;
@@ -73,11 +73,11 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// <summary>
         /// Switch to connected view
         /// </summary>
-        public async Task Connect()
+        public async Task SignIn()
         {
-            if (!await InitializeGit())
+            if (!await InitializeGit(_teamExplorerService))
             {
-                // TODO: Show error dialog
+                return;
             }
 
             // Continue even if Initialize Git fails
@@ -110,7 +110,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                 Content = _reposContent;
                 if (s_currentAccount != CredentialsStore.Default.CurrentAccount?.AccountName)
                 {
-                    if (!SetGitCredential())
+                    if (!SetGitCredential(_teamExplorerService))
                     {
                         // TODO: Show error dialog.
                     }
@@ -121,7 +121,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             }
             else
             {
-                Disconnect();
+                ShowSignInView();
             }
         }
 
@@ -145,7 +145,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             Debug.WriteLine("CsrSectionControlViewModel.Refresh");
             if (CredentialsStore.Default.CurrentAccount == null)
             {
-                Disconnect();
+                ShowSignInView();
             }
             else
             {
@@ -205,7 +205,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         {
             if (CredentialsStore.Default.CurrentAccount != null)
             {
-                if (!SetGitCredential())
+                if (!SetGitCredential(_teamExplorerService))
                 {
                     return;
                 }
@@ -217,24 +217,36 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             Refresh();
         }
 
-        private static async Task<bool> InitializeGit()
+        private static async Task<bool> InitializeGit(ITeamExplorerUtils teamExplorer)
         {
             if (s_gitInited)
             {
                 return true;
             }
 
-            if (!await CsrGitUtils.SetUseHttpPath())
-            {
-                // TODO: show error message
-                return false;
-            }
-
-            s_gitInited = SetGitCredential();
-            return s_gitInited;
+            return s_gitInited = (await SetUseHttpPath(teamExplorer)) && SetGitCredential(teamExplorer);
         }
 
-        private static bool SetGitCredential()
+        private static async Task<bool> SetUseHttpPath(ITeamExplorerUtils teamExplorer)
+        {
+            bool ret = false;
+            try
+            {
+                ret = await CsrGitUtils.SetUseHttpPath();
+            }
+            catch (Exception)
+            {
+            }
+            if (!ret)
+            {
+                teamExplorer.ShowMessage(
+                    "Failed to initialize git. Check your Git for Windows installation. [Retry]",
+                    new ProtectedCommand(taskHandler: () => SetUseHttpPath(teamExplorer)));
+            }
+            return ret;
+        }
+
+        private static bool SetGitCredential(ITeamExplorerUtils teamExplorer)
         {
             if (CredentialsStore.Default.CurrentAccount != null)
             {
@@ -243,7 +255,9 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                     CredentialsStore.Default.CurrentAccount.RefreshToken,
                     useHttpPath: false))
                 {
-                    // TODO: show error message
+                    teamExplorer.ShowMessage(
+                        "Failed to initialize git. Check your Git for Windows installation. [Retry]",
+                        new ProtectedCommand(() => SetGitCredential(teamExplorer)));
                     return false;
                 }
             }

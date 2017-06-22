@@ -75,6 +75,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                 return;
             }
 
+            // TODO: let server return "existed" error. 
             _repositories = await CsrUtils.GetCloudReposAsync(SelectedProject.ProjectId);
             return;
         }
