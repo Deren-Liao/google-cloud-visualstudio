@@ -87,7 +87,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             await CloneAsync(cloudRepo);
             if (base.Result != null && GotoCsrWebPage)
             {
-                string fmt = $"https://console.cloud.google.com/code/develop/browse/{0}?project={1}";
+                string fmt = "https://console.cloud.google.com/code/develop/browse/{0}?project={1}";
                 string url = String.Format(fmt, RepositoryName, SelectedProject.ProjectId);
                 Process.Start(url);
             }
