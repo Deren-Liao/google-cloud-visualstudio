@@ -85,6 +85,12 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             var cloudRepo = await csrDatasource.CreateRepoAsync(RepositoryName);
 
             await CloneAsync(cloudRepo);
+            if (base.Result != null && GotoCsrWebPage)
+            {
+                string fmt = $"https://console.cloud.google.com/code/develop/browse/{0}?project={1}";
+                string url = String.Format(fmt, RepositoryName, SelectedProject.ProjectId);
+                Process.Start(url);
+            }
         }
 
         protected override void ValidateRepoName()
