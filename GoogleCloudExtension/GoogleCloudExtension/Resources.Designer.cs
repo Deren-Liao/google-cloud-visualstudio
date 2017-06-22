@@ -2338,15 +2338,6 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Connect....
-        /// </summary>
-        public static string CsrConnectLinkButtonCaption {
-            get {
-                return ResourceManager.GetString("CsrConnectLinkButtonCaption", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Google Cloud Source Repositories.
         /// </summary>
         public static string CsrConnectSectionTitle {
@@ -2419,15 +2410,6 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Disconnect.
-        /// </summary>
-        public static string CsrDisconnectLinkButtonCaption {
-            get {
-                return ResourceManager.GetString("CsrDisconnectLinkButtonCaption", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to _Project:.
         /// </summary>
         public static string CsrProjectSelectionLabel {
@@ -2460,6 +2442,15 @@ namespace GoogleCloudExtension {
         public static string CsrRepositorySelectionLabel {
             get {
                 return ResourceManager.GetString("CsrRepositorySelectionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sign in.
+        /// </summary>
+        public static string CsrSignInLinkButtonCaption {
+            get {
+                return ResourceManager.GetString("CsrSignInLinkButtonCaption", resourceCulture);
             }
         }
         

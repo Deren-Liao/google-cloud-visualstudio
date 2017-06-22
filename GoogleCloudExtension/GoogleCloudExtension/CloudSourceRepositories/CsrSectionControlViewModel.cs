@@ -34,7 +34,6 @@ namespace GoogleCloudExtension.CloudSourceRepositories
     {
         /// Sometimes, the view and view model is recreated by Team Explorer.
         /// This is to preserve the states when a new user control is created.
-        private static bool s_isConnected;
         private static string s_currentAccount;
         private static bool s_gitInited;
 
@@ -68,7 +67,6 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         public void Disconnect()
         {
             Content = _unconnectedContent;
-            s_isConnected = false;
             s_currentAccount = null;
         }
 
@@ -77,14 +75,12 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// </summary>
         public async Task Connect()
         {
-            if (!(await InitializeGit()))
+            if (!await InitializeGit())
             {
-                return;
+                // TODO: Show error dialog
             }
-            if (s_isConnected)
-            {
-                return;
-            }
+
+            // Continue even if Initialize Git fails
             if (CredentialsStore.Default.CurrentAccount == null)
             {
                 ManageAccountsWindow.PromptUser();
@@ -92,7 +88,6 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             if (CredentialsStore.Default.CurrentAccount != null)
             {
                 Content = _reposContent;
-                s_isConnected = true;
                 Refresh();
             }
         }
@@ -101,7 +96,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         {
             Debug.WriteLine("CsrSectionControlViewModel Initialize");
             
-            _reposViewModel = new CsrReposViewModel(this, _teamExplorerService);
+            _reposViewModel = new CsrReposViewModel(_teamExplorerService);
             _unconnectedViewModel = new CsrUnconnectedViewModel(this);
             _reposContent.DataContext = _reposViewModel;
             _unconnectedContent.DataContext = _unconnectedViewModel;
@@ -110,15 +105,16 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             CredentialsStore.Default.CurrentAccountChanged += _accountChangedHandler;
             CredentialsStore.Default.Reset += _accountChangedHandler;
 
-            if (s_isConnected && CredentialsStore.Default.CurrentAccount != null)
+            if (CredentialsStore.Default.CurrentAccount != null)
             {
                 Content = _reposContent;
                 if (s_currentAccount != CredentialsStore.Default.CurrentAccount?.AccountName)
                 {
                     if (!SetGitCredential())
                     {
-                        return;
+                        // TODO: Show error dialog.
                     }
+                    // Continue nevertheless SetGitCredential succeeds or not.
                     _reposViewModel.Refresh();
                 }
                 s_currentAccount = CredentialsStore.Default.CurrentAccount?.AccountName;
@@ -151,7 +147,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             {
                 Disconnect();
             }
-            else if (s_isConnected)
+            else
             {
                 s_currentAccount = CredentialsStore.Default.CurrentAccount?.AccountName;
                 _reposViewModel.Refresh();
@@ -214,7 +210,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                     return;
                 }
             }
-            if (s_isConnected && s_currentAccount == CredentialsStore.Default.CurrentAccount?.AccountName)
+            if (s_currentAccount == CredentialsStore.Default.CurrentAccount?.AccountName)
             {
                 return;
             }

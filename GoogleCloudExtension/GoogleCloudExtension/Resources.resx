@@ -2623,8 +2623,8 @@
     <value>Clone</value>
     <comment>The clone link button caption</comment>
   </data>
-  <data name="CsrConnectLinkButtonCaption" xml:space="preserve">
-    <value>Connect...</value>
+  <data name="CsrSignInLinkButtonCaption" xml:space="preserve">
+    <value>Sign in</value>
     <comment>The connect link button caption</comment>
   </data>
   <data name="CsrCreateLinkButtonCaption" xml:space="preserve">
@@ -2634,10 +2634,6 @@
   <data name="CsrDescription" xml:space="preserve">
     <value>Fully-featured private Git repositories hosted on Cloud Platform on highly-replicated backend storage systems distributed geographically across multiple data centers and run on infrastructure proven for reliability.</value>
     <comment>Description of CSR. Intend to be attractive text.</comment>
-  </data>
-  <data name="CsrDisconnectLinkButtonCaption" xml:space="preserve">
-    <value>Disconnect</value>
-    <comment>The Disconnect link button caption</comment>
   </data>
   <data name="CsrContextMenuLocalPathLabel" xml:space="preserve">
     <value>Local Path</value>

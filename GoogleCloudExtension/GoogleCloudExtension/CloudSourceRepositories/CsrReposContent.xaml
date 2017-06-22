@@ -40,13 +40,6 @@
                     Command="{Binding CreateCommand}" 
                     Content="{x:Static ext:Resources.CsrCreateLinkButtonCaption}" />
 
-            <Separator Margin="3,0,3,0" Style="{StaticResource VerticalSeparatorStyle}" />
-
-            <Button Style="{StaticResource SectionButtonStyle}" 
-                    KeyboardNavigation.TabIndex="2" 
-                    Content="{x:Static ext:Resources.CsrDisconnectLinkButtonCaption}" 
-                    Command="{Binding DisconnectCommand}"/>
-
         </WrapPanel>
 
         <ListView 
