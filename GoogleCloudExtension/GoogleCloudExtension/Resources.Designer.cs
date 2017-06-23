@@ -331,6 +331,15 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to establish Remote PowerShell connection..
+        /// </summary>
+        public static string AttachDebuggerConnectionFailedMessage {
+            get {
+                return ResourceManager.GetString("AttachDebuggerConnectionFailedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Or create a new account.
         /// </summary>
         public static string AttachDebuggerCreateManageAccountLinkCaption {
@@ -363,6 +372,15 @@ namespace GoogleCloudExtension {
         public static string AttachDebuggerHelpStepLinkCpation {
             get {
                 return ResourceManager.GetString("AttachDebuggerHelpStepLinkCpation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remote PowerShell error..
+        /// </summary>
+        public static string AttachDebuggerInstallerError {
+            get {
+                return ResourceManager.GetString("AttachDebuggerInstallerError", resourceCulture);
             }
         }
         
@@ -2248,7 +2266,7 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to clone the repository.
+        ///   Looks up a localized string similar to Failed to clone the repository..
         /// </summary>
         public static string CsrCloneFailedMessage {
             get {
@@ -2257,7 +2275,7 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to set credential.
+        ///   Looks up a localized string similar to Failed to set credential..
         /// </summary>
         public static string CsrCloneFailedToSetCredentialMessage {
             get {
@@ -2302,7 +2320,7 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ....
+        ///   Looks up a localized string similar to Browse.
         /// </summary>
         public static string CsrClonePathBrowseButtonCaption {
             get {
@@ -2311,7 +2329,7 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The destination path {0} is not empty.
+        ///   Looks up a localized string similar to The destination path {0} is not empty..
         /// </summary>
         public static string CsrClonePathExistNotEmptyMessageFormat {
             get {
@@ -2320,11 +2338,20 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The path does not exist.
+        ///   Looks up a localized string similar to The path does not exist..
         /// </summary>
         public static string CsrClonePathNotExistMessage {
             get {
                 return ResourceManager.GetString("CsrClonePathNotExistMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set the local repository path. {path-input}\{repo-name} is used as the destination path.
+        /// </summary>
+        public static string CsrCloneToTextBoxToolTip {
+            get {
+                return ResourceManager.GetString("CsrCloneToTextBoxToolTip", resourceCulture);
             }
         }
         
@@ -2374,7 +2401,7 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Goto Google CSR page to mirror repo from GitHub or Gitbuckets (git only).
+        ///   Looks up a localized string similar to After creation, goto GCP console to mirror repository from GitHub or Gitbuckets (git only)..
         /// </summary>
         public static string CsrCreateMirrorAfterPublish {
             get {
@@ -2385,18 +2412,18 @@ namespace GoogleCloudExtension {
         /// <summary>
         ///   Looks up a localized string similar to Repository name.
         /// </summary>
-        public static string CsrCreateRepoNameTextBoxLebel {
+        public static string CsrCreateRepoNameTextBoxLabel {
             get {
-                return ResourceManager.GetString("CsrCreateRepoNameTextBoxLebel", resourceCulture);
+                return ResourceManager.GetString("CsrCreateRepoNameTextBoxLabel", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Supported characters are A-Z, a-z, 0-9, -, and _.
+        ///   Looks up a localized string similar to Create Google Cloud Source Repositories.
         /// </summary>
-        public static string CsrCreateRepoNameValidationMessage {
+        public static string CsrCreateWindowTitle {
             get {
-                return ResourceManager.GetString("CsrCreateRepoNameValidationMessage", resourceCulture);
+                return ResourceManager.GetString("CsrCreateWindowTitle", resourceCulture);
             }
         }
         
@@ -2410,6 +2437,33 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading repositories ....
+        /// </summary>
+        public static string CsrLoadingRepoMessage {
+            get {
+                return ResourceManager.GetString("CsrLoadingRepoMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current GCP account has no project..
+        /// </summary>
+        public static string CsrNoProjectMessage {
+            get {
+                return ResourceManager.GetString("CsrNoProjectMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Empty list, choose another project.
+        /// </summary>
+        public static string CsrProjectContainsNoRepoMessage {
+            get {
+                return ResourceManager.GetString("CsrProjectContainsNoRepoMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to _Project:.
         /// </summary>
         public static string CsrProjectSelectionLabel {
@@ -2419,20 +2473,20 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The repository name already exists.
-        /// </summary>
-        public static string CsrRepoNameAlreadyExitstsMessage {
-            get {
-                return ResourceManager.GetString("CsrRepoNameAlreadyExitstsMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Repo name must start with A-Z, a-z, 0-9 or _.
         /// </summary>
         public static string CsrRepoNameStartWithMessageFormat {
             get {
                 return ResourceManager.GetString("CsrRepoNameStartWithMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Supported characters are A-Z, a-z, 0-9, -, and _.
+        /// </summary>
+        public static string CsrRepoNameValidationMessage {
+            get {
+                return ResourceManager.GetString("CsrRepoNameValidationMessage", resourceCulture);
             }
         }
         
@@ -3000,6 +3054,33 @@ namespace GoogleCloudExtension {
         public static string GCloudWrapperUtilsOldCloudSdkTitle {
             get {
                 return ResourceManager.GetString("GCloudWrapperUtilsOldCloudSdkTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project ID.
+        /// </summary>
+        public static string GcpProjectIdHeader {
+            get {
+                return ResourceManager.GetString("GcpProjectIdHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project Name.
+        /// </summary>
+        public static string GcpProjectNameHeader {
+            get {
+                return ResourceManager.GetString("GcpProjectNameHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project Number.
+        /// </summary>
+        public static string GcpProjectNumberHeader {
+            get {
+                return ResourceManager.GetString("GcpProjectNumberHeader", resourceCulture);
             }
         }
         
