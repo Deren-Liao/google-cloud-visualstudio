@@ -238,7 +238,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             if (CredentialsStore.Default.CurrentAccount != null)
             {
                 if (!CsrGitUtils.StoreCredential(
-                    "https://source.developers.google.com",
+                    CsrGitUtils.CsrUrlAuthority,
                     CredentialsStore.Default.CurrentAccount.RefreshToken,
                     CsrGitUtils.StoreCredentialPathOption.UrlHost))
                 {

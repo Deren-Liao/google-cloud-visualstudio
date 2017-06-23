@@ -160,6 +160,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             try
             {
                 GitRepository localRepo = await CsrGitUtils.CloneAsync(CloudRepo.Url, destPath);
+                VsGitData.AddLocalRepositories(GoogleCloudExtensionPackage.VsVersion, RepoName, destPath);
                 Result = new RepoItemViewModel(CloudRepo, localRepo.Root);
                 _owner.Close();
             }
