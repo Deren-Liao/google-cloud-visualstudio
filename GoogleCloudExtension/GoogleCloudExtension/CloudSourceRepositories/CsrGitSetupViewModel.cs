@@ -101,11 +101,16 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                 s_error = Resources.GitUtilsMissingGitErrorTitle;
                 return;
             }
-            if (!(await GitRepository.GitCredentialManagerInstalled()))
+            try
+            {
+                await GitRepository.GitCredentialManagerInstalled();
+            }
+            catch (GitCommandException)
             {
                 s_error = Resources.GitUtilsGitCredentialManagerNotInstalledMessage;
                 return;
             }
+
             s_error = null;
             GitInstallationVerified = true;
         }

@@ -153,6 +153,10 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             {
                 ErrorHandlerUtils.HandleAsyncExceptions(CheckInstallation);
             }
+            else
+            {
+                ContinueInitialize();
+            }
         }
 
         private async Task CheckInstallation()

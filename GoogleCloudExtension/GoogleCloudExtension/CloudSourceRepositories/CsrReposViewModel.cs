@@ -199,10 +199,11 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             IsReady = false;
             Loading = true;
 
+            var projects = await GetProjectsAsync();
             Repositories = new ObservableCollection<RepoItemViewModel>();
             try
             {
-                await AddLocalReposAsync(await GetLocalGitRepositories());
+                await AddLocalReposAsync(await GetLocalGitRepositories(), projects);
 
                 SetActiveRepo(_teamExplorer.GetActiveRepository());
             }
@@ -216,7 +217,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// <summary>
         /// projectRepos is used to cache the list of 'cloud repos' of the project-id.
         /// </summary>
-        private async Task AddLocalReposAsync(IList<GitRepository> localRepos)
+        private async Task AddLocalReposAsync(IList<GitRepository> localRepos, IList<Project> projects)
         {
             Dictionary<string, IList<Repo>> projectRepos
                 = new Dictionary<string, IList<Repo>>(StringComparer.OrdinalIgnoreCase);
@@ -226,7 +227,8 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                 foreach (var url in remoteUrls)
                 {
                     string projectId = CsrUtils.ParseProjectId(url);
-                    if (String.IsNullOrWhiteSpace(projectId))
+                    if (String.IsNullOrWhiteSpace(projectId) ||
+                        !projects.Any(x => x.ProjectId == projectId))
                     {
                         continue;
                     }
@@ -252,7 +254,6 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             Debug.WriteLine($"Check project id {projectId}");
             if (!projectReposMap.TryGetValue(projectId, out cloudRepos))
             {
-
                 try
                 {
                     cloudRepos = await CsrUtils.GetCloudReposAsync(projectId);
