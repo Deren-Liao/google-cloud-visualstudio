@@ -75,21 +75,14 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// </summary>
         public async Task SignIn()
         {
-            if (!await InitializeGit(_teamExplorerService))
-            {
-                return;
-            }
+            await InitializeGit(_teamExplorerService);
 
             // Continue even if Initialize Git fails
             if (CredentialsStore.Default.CurrentAccount == null)
             {
                 ManageAccountsWindow.PromptUser();
             }
-            if (CredentialsStore.Default.CurrentAccount != null)
-            {
-                Content = _reposContent;
-                Refresh();
-            }
+            Refresh();
         }
 
         public void ContinueInitialize()
@@ -149,6 +142,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             }
             else
             {
+                Content = _reposContent;
                 s_currentAccount = CredentialsStore.Default.CurrentAccount?.AccountName;
                 _reposViewModel.Refresh();
             }
@@ -157,10 +151,6 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         void ISectionViewModel.Initialize(ITeamExplorerUtils teamExplorerService)
         {
             _teamExplorerService = teamExplorerService.ThrowIfNull(nameof(teamExplorerService));
-            Action continueInit = () =>
-            {
-
-            };
 
             if (!CsrGitSetupViewModel.GitInstallationVerified)
             {
@@ -203,17 +193,11 @@ namespace GoogleCloudExtension.CloudSourceRepositories
 
         private void OnAccountChanged()
         {
-            if (CredentialsStore.Default.CurrentAccount != null)
-            {
-                if (!SetGitCredential(_teamExplorerService))
-                {
-                    return;
-                }
-            }
             if (s_currentAccount == CredentialsStore.Default.CurrentAccount?.AccountName)
             {
                 return;
             }
+            SetGitCredential(_teamExplorerService);
             Refresh();
         }
 

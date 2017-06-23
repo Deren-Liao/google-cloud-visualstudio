@@ -68,20 +68,9 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             var csrDataSource = CreateCsrDataSource(projectId);
             if (csrDataSource == null)
             {
-                return null;
+                return new List<Repo>();
             }
-            //try
-            //{
-                return await csrDataSource?.ListReposAsync();
-            //}
-            //// TODO: do not catch , let caller handle the exception.
-            //catch (DataSourceException ex)
-            //// Call out "no permission" project.
-            //when (ex.InnerGoogleApiException?.HttpStatusCode == System.Net.HttpStatusCode.Forbidden)
-            //{
-            //    Debug.WriteLine($"No permission to query repos from project id {projectId}");
-            //    return null;
-            //}
+            return await csrDataSource.ListReposAsync();
         }
 
         /// <summary>
