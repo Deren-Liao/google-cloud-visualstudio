@@ -23,10 +23,10 @@
     </UserControl.Resources>
 
     <UserControl.Style>
-        <Binding Source="{StaticResource CommonDialogStyleBase}" />
+        <Binding Source="{StaticResource CommonDialogStyleDynamicSmall}" />
     </UserControl.Style>
 
-    <theming:CommonDialogWindowBaseContent>
+    <theming:CommonDialogWindowBaseContent HasBanner="True">
         <theming:CommonDialogWindowBaseContent.Buttons>
             <theming:DialogButtonInfo Caption="{x:Static ext:Resources.UiOkButtonCaption}"
                                       Command="{Binding OkCommand}"
@@ -38,65 +38,67 @@
 
             <Label 
                 Content="{x:Static ext:Resources.CsrProjectSelectionLabel}"
-                Target="{Binding ElementName=ProjectsComboBox}"
+                Target="{Binding ElementName=_projectsComboBox}"
                 Style="{StaticResource CommonLabelStyle}" />
 
             <ComboBox 
-                x:Name="ProjectsComboBox"
+                x:Name="_projectsComboBox"
                 ItemsSource="{Binding Projects}"
-                SelectedItem="{Binding SelectedProject, Mode=TwoWay}"
+                SelectedItem="{Binding SelectedProject}"
                 DisplayMemberPath="Name"        
                 IsSynchronizedWithCurrentItem="True"
-                IsTextSearchEnabled="True" />
+                IsTextSearchEnabled="True"
+                Style="{StaticResource CommonComboBoxStyle}"/>
 
             <Label 
-                Content="{x:Static ext:Resources.CsrCreateRepoNameTextBoxLebel}"
-                Target="{Binding ElementName=RepositoryNameTextBox}"
+                Content="{x:Static ext:Resources.CsrRepositorySelectionLabel}"
+                Target="{Binding ElementName=_repositoryTextBox}"
                 Style="{StaticResource CommonLabelStyle}"
-                Margin="0,6,0,0"/>
+                Margin="0,5,0,0"/>
 
             <TextBox 
-                x:Name="RepositoryNameTextBox"
-                Text="{Binding RepositoryName, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, Mode=TwoWay}"
+                x:Name="_repositoryTextBox"
+                Text="{Binding RepositoryName, UpdateSourceTrigger=PropertyChanged, 
+                    ValidatesOnNotifyDataErrors=True, Mode=TwoWay}"
                 Style="{StaticResource CommonTextBoxStyle}"
-                MaxLength="{Binding REPO_NAME_LEN}"
-                Margin="0,0,6,0" />
+                MaxLength="{Binding RepoNameMaxLength}" />
 
             <Label 
                 Content="{x:Static ext:Resources.CsrCloneLocalPathLabel}"
-                Target="{Binding ElementName=LocalPathTextBox}"
+                Target="{Binding ElementName=_localPathTextBox}"
                 Style="{StaticResource CommonLabelStyle}" 
-                Margin="0,6,0,0" />
+                Margin="0,5,0,0" />
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <TextBox 
-                    x:Name="LocalPathTextBox"
-                    Text="{Binding LocalPath, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, Mode=TwoWay}"
-                    Style="{StaticResource CommonTextBoxStyle}"
-                    Margin="0,0,6,0" />
-
+            <DockPanel>
                 <Button 
-                    Grid.Column="1"
+                    DockPanel.Dock="Right"
                     Content="{x:Static ext:Resources.CsrClonePathBrowseButtonCaption}"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Right"
                     Command="{Binding PickFolderCommand}"
-                    Style="{StaticResource CommonButtonDynamicStyle}" Height="26" Margin="0,2"/>
+                    Style="{StaticResource CommonButtonDynamicStyle}" />
 
-            </Grid>
+                <TextBox 
+                    x:Name="_localPathTextBox"
+                    Text="{Binding LocalPath, UpdateSourceTrigger=PropertyChanged, 
+                        ValidatesOnNotifyDataErrors=True, Mode=TwoWay}"
+                    Style="{StaticResource CommonTextBoxStyle}"
+                    Margin="0,0,5,0">
+                    <TextBox.ToolTip>
+                        <ToolTip 
+                            Content="{x:Static ext:Resources.CsrCloneToTextBoxToolTip}"
+                            Style="{StaticResource CommonTooltipStyle}"/>
+                    </TextBox.ToolTip>
+                </TextBox>
 
+            </DockPanel>
 
             <CheckBox 
-                Margin="0,6,0,0"
+                Margin="0,5,0,0"
                 VerticalAlignment="Center"
                 IsChecked="{Binding GotoCsrWebPage}" >
                 <TextBlock Text="{x:Static ext:Resources.CsrCreateMirrorAfterPublish}"
-                            TextWrapping="NoWrap"
+                            TextWrapping="Wrap"
                             TextTrimming="CharacterEllipsis"
                             Style="{StaticResource CommonTextStyle}"/>
             </CheckBox>
@@ -105,7 +107,7 @@
                 Margin="0,12,0,0" 
                 Width="60" 
                 HorizontalAlignment="Left" 
-                Visibility="{Binding IsReady, Converter={utils:BooleanConverter TrueValue='Hidden',FalseValue='Visible'}}"/>
+                Visibility="{Binding IsReady, Converter={utils:VisibilityConverter IsNegated=True}}"/>
 
         </StackPanel>
     </theming:CommonDialogWindowBaseContent>

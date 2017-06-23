@@ -78,6 +78,12 @@ namespace GoogleCloudExtension.Utils
         [DllImport("Advapi32.dll", EntryPoint = "CredWriteW", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern bool CredWrite([In] ref CREDENTIAL userCredential, [In] UInt32 flags);
 
+        /// <summary>
+        /// For more detail, 
+        /// <see href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa374788(v=vs.85).aspx">
+        /// CREDENTIAL structure</see>
+        /// Checkout Persist field.
+        /// </summary>
         public enum CredentialPersistence : uint
         {
             Session = 1,
@@ -85,6 +91,12 @@ namespace GoogleCloudExtension.Utils
             Enterprise
         }
 
+        /// <summary>
+        /// For more detail, 
+        /// <see href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa374788(v=vs.85).aspx">
+        /// CREDENTIAL structure</see>
+        /// Checkout Type field.
+        /// </summary>
         public enum CredentialType
         {
             Generic = 1,

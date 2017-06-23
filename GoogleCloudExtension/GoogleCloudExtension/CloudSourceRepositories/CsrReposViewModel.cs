@@ -14,7 +14,6 @@
 
 using Google.Apis.CloudResourceManager.v1.Data;
 using Google.Apis.CloudSourceRepositories.v1.Data;
-using GoogleCloudExtension.Accounts;
 using GoogleCloudExtension.DataSources;
 using GoogleCloudExtension.GitUtils;
 using GoogleCloudExtension.TeamExplorerExtension;
@@ -118,8 +117,8 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         {
             _teamExplorer = teamExplorer.ThrowIfNull(nameof(teamExplorer));
             ListDoubleClickCommand = new ProtectedCommand(SetSelectedRepoActive);
-            CloneCommand = new ProtectedCommand(Clone);
-            CreateCommand = new ProtectedCommand(Create);
+            CloneCommand = new ProtectedAsyncCommand(CloneAsync);
+            CreateCommand = new ProtectedAsyncCommand(CreateAsync);
         }
 
         /// <summary>
@@ -197,24 +196,12 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                 return;
             }
 
-            var resourceManager = DataSourceFactories.CreateResourceManagerDataSource();
-            if (resourceManager == null)
-            {
-                return;
-            }
-
             IsReady = false;
             Loading = true;
+
             Repositories = new ObservableCollection<RepoItemViewModel>();
-            
             try
             {
-                var projects = await resourceManager.GetSortedActiveProjectsAsync();
-                if (!projects.Any())
-                {
-                    return;
-                }
-
                 await AddLocalReposAsync(await GetLocalGitRepositories());
 
                 SetActiveRepo(_teamExplorer.GetActiveRepository());
@@ -310,35 +297,57 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             return localRepos;
         }
 
-        private void Clone()
+        private async Task CloneAsync()
         {
-            var repoItem = CsrCloneWindow.PromptUser();
+            var projects = await GetProjectsAsync();
+            if (!projects.Any())
+            {
+                return;
+            }
+
+            var repoItem = CsrCloneWindow.PromptUser(projects);
             if (repoItem != null)
             {
-                (Repositories ?? new ObservableCollection<RepoItemViewModel>()).Add(repoItem);
+                if (Repositories == null)
+                {
+                    Repositories = new ObservableCollection<RepoItemViewModel>();
+                }
+                Repositories.Add(repoItem);
             }
         }
 
-        private void Create()
+        private async Task CreateAsync()
         {
-            var repoItem = CsrCreateWindow.PromptUser();
+            var projects = await GetProjectsAsync();
+            if (!projects.Any())
+            {
+                return;
+            }
+            var repoItem = CsrCreateWindow.PromptUser(projects);
             if (repoItem != null)
             {
-                SetCurrentRepo(repoItem.LocalPath);
-
-                var msg = string.Format("The repository {0} has been created successfully.", repoItem.Name);
-                msg += " " + string.Format("[Create a new project or solution]({0}) now.", repoItem.LocalPath);
-
-                (Repositories ?? new ObservableCollection<RepoItemViewModel>()).Add(repoItem);
-                _teamExplorer.ShowMessage(msg,
-                    command: new ProtectedCommand(handler: () =>
+                if (repoItem != null)
+                {
+                    if (Repositories == null)
                     {
-                        SetDefaultProjectPath(repoItem.LocalPath);
-                        var serviceProvider = ShellUtils.GetGloblalServiceProvider();
-                        var solution = serviceProvider.GetService(typeof(SVsSolution)) as IVsSolution;
-                        solution?.CreateNewProjectViaDlg(null, null, 0);
-                        _teamExplorer.ShowHomeSection();
-                    }));
+                        Repositories = new ObservableCollection<RepoItemViewModel>();
+                    }
+                    Repositories.Add(repoItem);
+                    SetCurrentRepo(repoItem.LocalPath);
+
+                    var msg = string.Format("The repository {0} has been created successfully.", repoItem.Name);
+                    msg += " " + string.Format("[Create a new project or solution]({0}) now.", repoItem.LocalPath);
+
+                    _teamExplorer.ShowMessage(msg,
+                        command: new ProtectedCommand(handler: () =>
+                        {
+                            SetDefaultProjectPath(repoItem.LocalPath);
+                            var serviceProvider = ShellUtils.GetGloblalServiceProvider();
+                            var solution = serviceProvider.GetService(typeof(SVsSolution)) as IVsSolution;
+                            solution?.CreateNewProjectViaDlg(null, null, 0);
+                            _teamExplorer.ShowHomeSection();
+                        }));
+                }
             }
         }
 
@@ -395,6 +404,38 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                     "Error setting the create project path in the registry '{0}'", ex));
             }
             return old;
+        }
+
+        /// <summary>
+        /// Return a list of projects. Returns empty list if no item is found.
+        /// </summary>
+        private async Task<IList<Project>> GetProjectsAsync()
+        {
+            ResourceManagerDataSource resourceManager = DataSourceFactories.CreateResourceManagerDataSource();
+            if (resourceManager == null)
+            {
+                return new List<Project>();
+            }
+
+            IsReady = false;
+            Loading = true;
+
+            try
+            {
+                var projects = await resourceManager.GetSortedActiveProjectsAsync();
+                if (!projects.Any())
+                {
+                    UserPromptUtils.OkPrompt(
+                        message: Resources.CsrNoProjectMessage,
+                        title: Resources.CsrConnectSectionTitle);
+                }
+                return projects;
+            }
+            finally
+            {
+                IsReady = true;
+                Loading = false;
+            }
         }
     }
 }

@@ -2615,6 +2615,26 @@
     <value>To get a list of projects, select an account.</value>
     <comment>The message shown when there is no current user on the template wizard pick project window.</comment>
   </data>
+  <data name="GcpProjectIdHeader" xml:space="preserve">
+    <value>Project ID</value>
+    <comment>Project ID column header for a GCP Project data grid.</comment>
+  </data>
+  <data name="GcpProjectNameHeader" xml:space="preserve">
+    <value>Project Name</value>
+    <comment>Project Name column header for a GCP Project data grid.</comment>
+  </data>
+  <data name="GcpProjectNumberHeader" xml:space="preserve">
+    <value>Project Number</value>
+    <comment>Project Number column header for a GCP Project data grid.</comment>
+  </data>
+  <data name="AttachDebuggerConnectionFailedMessage" xml:space="preserve">
+    <value>Failed to establish Remote PowerShell connection.</value>
+    <comment>Error message indicates it failed to establish Remote Powershell connection.</comment>
+  </data>
+  <data name="AttachDebuggerInstallerError" xml:space="preserve">
+    <value>Remote PowerShell error.</value>
+    <comment>Generic error message on executing Remote PowerShell commands.</comment>
+  </data>
   <data name="CsrConnectSectionTitle" xml:space="preserve">
     <value>Google Cloud Source Repositories</value>
     <comment>The title of connect section of Cloud Source Repositories at Visual Studio Team Explorer.</comment>
@@ -2652,23 +2672,23 @@
     <comment>The title of the clone CSR window</comment>
   </data>
   <data name="CsrCloneFailedMessage" xml:space="preserve">
-    <value>Failed to clone the repository</value>
+    <value>Failed to clone the repository.</value>
     <comment>Error message when it fails to clone for some reason.</comment>
   </data>
   <data name="CsrCloneFailedToSetCredentialMessage" xml:space="preserve">
-    <value>Failed to set credential</value>
+    <value>Failed to set credential.</value>
     <comment>Error message when it fails to set git credential</comment>
   </data>
   <data name="CsrCloneLocalPathLabel" xml:space="preserve">
     <value>_Clone to:</value>
     <comment>Label to the input local path text box</comment>
   </data>
-  <data name="CsrCloneNoProject" xml:space="preserve">
-    <value>There is no project</value>
+  <data name="CsrNoProjectMessage" xml:space="preserve">
+    <value>Current GCP account has no project.</value>
     <comment>Error message if the user account has no any project</comment>
   </data>
   <data name="CsrClonePathBrowseButtonCaption" xml:space="preserve">
-    <value>...</value>
+    <value>Browse</value>
     <comment>Folder browse button caption</comment>
   </data>
   <data name="CsrProjectSelectionLabel" xml:space="preserve">
@@ -2684,32 +2704,64 @@
     <comment>The field name of the input local path text box</comment>
   </data>
   <data name="CsrClonePathExistNotEmptyMessageFormat" xml:space="preserve">
-    <value>The destination path {0} is not empty</value>
+    <value>The destination path {0} is not empty.</value>
     <comment>Error message when destination path is not empty. {0} is the destination path where repository is copied to.</comment>
   </data>
   <data name="CsrClonePathNotExistMessage" xml:space="preserve">
-    <value>The path does not exist</value>
+    <value>The path does not exist.</value>
     <comment>Error message when the local path does not exists</comment>
   </data>
+  <data name="CsrCloneToTextBoxToolTip" xml:space="preserve">
+    <value>Set the local repository path. {path-input}\{repo-name} is used as the destination path</value>
+    <comment>Tooltip to the "Clone to" text box on the clone dialog.</comment>
+  </data>
+  <data name="CsrProjectContainsNoRepoMessage" xml:space="preserve">
+    <value>Empty list, choose another project</value>
+    <comment>The selected project does not have any repository, asks to select a different one</comment>
+  </data>
+  <data name="CsrLoadingRepoMessage" xml:space="preserve">
+    <value>Loading repositories ...</value>
+    <comment>Message when loading repositories</comment>
+  </data>
   <data name="CsrCreateMirrorAfterPublish" xml:space="preserve">
-    <value>Goto Google CSR page to mirror repo from GitHub or Gitbuckets (git only)</value>
+    <value>After creation, goto GCP console to mirror repository from GitHub or Gitbuckets (git only).</value>
     <comment>Caption for checkbox that asks to goto CSR page after repo is created</comment>
   </data>
-  <data name="CsrCreateRepoNameValidationMessage" xml:space="preserve">
+  <data name="CsrRepoNameValidationMessage" xml:space="preserve">
     <value>Supported characters are A-Z, a-z, 0-9, -, and _</value>
     <comment>Repo name validation error message</comment>
   </data>
-  <data name="CsrCreateRepoNameTextBoxLebel" xml:space="preserve">
+  <data name="CsrCreateRepoNameTextBoxLabel" xml:space="preserve">
     <value>Repository name</value>
     <comment>Label to repository name input text box</comment>
-  </data>
-  <data name="CsrRepoNameAlreadyExitstsMessage" xml:space="preserve">
-    <value>The repository name already exists</value>
-    <comment>Validation message tells that the input repository name already exists.</comment>
   </data>
   <data name="CsrRepoNameStartWithMessageFormat" xml:space="preserve">
     <value>Repo name must start with A-Z, a-z, 0-9 or _</value>
     <comment>Repository name first charactor validation message.</comment>
+  </data>
+  <data name="CsrCreateWindowTitle" xml:space="preserve">
+    <value>Create Google Cloud Source Repositories</value>
+    <comment>The title to create CSR Repository window</comment>
+  </data>
+  <data name="CsrCloneLocalPathLabel" xml:space="preserve">
+    <value>_Clone to:</value>
+    <comment>Label to the input local path text box</comment>
+  </data>
+  <data name="CsrCloneNoProject" xml:space="preserve">
+    <value>There is no project</value>
+    <comment>Error message if the user account has no any project</comment>
+  </data>
+  <data name="CsrProjectSelectionLabel" xml:space="preserve">
+    <value>_Project:</value>
+    <comment>Project selection label</comment>
+  </data>
+  <data name="CsrRepositorySelectionLabel" xml:space="preserve">
+    <value>_Repository:</value>
+    <comment>Repository selection label</comment>
+  </data>
+  <data name="CsrCloneLocalPathFieldName" xml:space="preserve">
+    <value>Local path</value>
+    <comment>The field name of the input local path text box</comment>
   </data>
   <data name="GitUtilsGitCredentialManagerNotInstalledMessage" xml:space="preserve">
     <value>Git Credential Manager for Windows (git-credeitnal-manager) is not installed correctly</value>

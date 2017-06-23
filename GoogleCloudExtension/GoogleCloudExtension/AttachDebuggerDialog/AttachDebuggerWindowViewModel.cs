@@ -20,8 +20,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-using System.Windows.Threading;
-
 namespace GoogleCloudExtension.AttachDebuggerDialog
 {
     /// <summary>
@@ -86,7 +84,7 @@ namespace GoogleCloudExtension.AttachDebuggerDialog
 
         public AttachDebuggerWindowViewModel(Instance gceInstance, AttachDebuggerWindow dialogWindow)
         {
-            OKCommand = new ProtectedCommand(taskHandler: () => ExceuteAsync(OnOKCommand), canExecuteCommand: false);
+            OKCommand = new ProtectedAsyncCommand(() => ExceuteAsync(OnOKCommand), canExecuteCommand: false);
             CancelCommand = new ProtectedCommand(OnCancelCommand, canExecuteCommand: false);
 
             var context = new AttachDebuggerContext(gceInstance, dialogWindow);

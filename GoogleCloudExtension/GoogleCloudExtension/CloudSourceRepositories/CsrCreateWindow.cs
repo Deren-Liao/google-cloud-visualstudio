@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Google.Apis.CloudResourceManager.v1.Data;
+using StringResources = GoogleCloudExtension.Resources;
 using GoogleCloudExtension.Theming;
+using System.Collections.Generic;
 
 namespace GoogleCloudExtension.CloudSourceRepositories
 {
@@ -23,19 +26,20 @@ namespace GoogleCloudExtension.CloudSourceRepositories
     {
         private  CsrCreateWindowViewModel ViewModel { get; }
 
-        private CsrCreateWindow(): base("Create Google repository")
+        private CsrCreateWindow(IList<Project> projects): base(StringResources.CsrCreateWindowTitle)
         {
-            ViewModel = new CsrCreateWindowViewModel(this);
+            ViewModel = new CsrCreateWindowViewModel(this, projects);
             Content = new CsrCreateWindowContent { DataContext = ViewModel };
         }
 
         /// <summary>
         /// Show create a new repository dialog
         /// </summary>
-        /// <returns>A repo item shown in CSR section at Team Explorer Connect tab.</returns>
-        public static RepoItemViewModel PromptUser()
+        /// <param name="projects">A list of GCP <seealso cref="Project"/>.</param>
+        /// <returns>The created and cloned repo item</returns>
+        public static RepoItemViewModel PromptUser(IList<Project> projects)
         {
-            var dialog = new CsrCreateWindow();
+            var dialog = new CsrCreateWindow(projects);
             dialog.ShowModal();
             return dialog.ViewModel.Result;
         }

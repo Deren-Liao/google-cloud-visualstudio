@@ -14,20 +14,10 @@
 
 using Google.Apis.CloudResourceManager.v1.Data;
 using Google.Apis.CloudSourceRepositories.v1.Data;
-using GoogleCloudExtension.Accounts;
-using GoogleCloudExtension.DataSources;
-using GoogleCloudExtension.GitUtils;
-using GoogleCloudExtension.Theming;
 using GoogleCloudExtension.Utils;
-using GoogleCloudExtension.Utils.Validation;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace GoogleCloudExtension.CloudSourceRepositories
 {
@@ -36,17 +26,12 @@ namespace GoogleCloudExtension.CloudSourceRepositories
     /// </summary>
     public class CsrCloneWindowViewModel : CsrCloneCreateViewModelBase
     {
-        private IList<Repo> _repos;
         private Repo _selectedRepo;
 
         /// <summary>
         /// The list of repositories that belong to the project
         /// </summary>
-        public IList<Repo> Repositories
-        {
-            get { return _repos; }
-            private set { SetValueAndRaise(ref _repos, value); }
-        }
+        public AsyncRepositories RepositoriesAsync { get; } = new AsyncRepositories();
 
         /// <summary>
         /// Currently selected repository
@@ -63,27 +48,34 @@ namespace GoogleCloudExtension.CloudSourceRepositories
 
         public override ProtectedCommand OkCommand { get; }
 
-        protected override string RepoName => SelectedRepository?.GetRealRepoName();
+        protected override string RepoName => SelectedRepository?.GetRepoName();
 
-        public CsrCloneWindowViewModel(CommonDialogWindowBase owner) : base(owner)
+        public CsrCloneWindowViewModel(CsrCloneWindow owner, IList<Project> projects) : base(owner, projects)
         {
-            OkCommand = new ProtectedCommand(taskHandler: () => ExecuteAsync(() => CloneAsync()), canExecuteCommand: false);
+            OkCommand = new ProtectedAsyncCommand(
+                () => ExecuteAsync(() => CloneAsync(SelectedRepository)), 
+                canExecuteCommand: false);
+            RepositoriesAsync.PropertyChanged += RepositoriesAsyncPropertyChanged;
         }
 
-        protected override async Task ListRepoAsync()
+        protected override void OnSelectedProjectChanged(string projectId)
         {
-            Debug.WriteLine("ListRepoAsync");
+            ErrorHandlerUtils.HandleAsyncExceptions(() =>
+                RepositoriesAsync.StartListRepoTaskAsync(projectId));
+        }
 
-            Repositories = null;
-            if (SelectedProject == null)
+        private void RepositoriesAsyncPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
             {
-                return;
+                // RaiseAllPropertyChanged set e.PropertyName as null
+                case null:
+                case nameof(AsyncRepositories.Value):
+                    SelectedRepository = RepositoriesAsync.Value?.FirstOrDefault();
+                    break;
+                default:
+                    break;
             }
-
-            Repositories = await CsrUtils.GetCloudReposAsync(SelectedProject.ProjectId);
-            SelectedRepository = Repositories?.FirstOrDefault();
         }
-
-        private Task CloneAsync() => CloneAsync(SelectedRepository);
     }
 }

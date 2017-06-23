@@ -64,7 +64,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             _parent = parent;
             InstallGitCommand = new ProtectedCommand(
                 () => Process.Start(ValidateGitDependencyHelper.GitInstallationLink));
-            TestCommand = new ProtectedCommand(taskHandler: OnTestRequest);
+            TestCommand = new ProtectedAsyncCommand(OnTestRequest);
         }
 
         public async Task OnTestRequest()

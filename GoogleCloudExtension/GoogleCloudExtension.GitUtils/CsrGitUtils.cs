@@ -14,7 +14,6 @@
 
 using GoogleCloudExtension.Utils;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.IO;
@@ -28,6 +27,16 @@ namespace GoogleCloudExtension.GitUtils
     public static class CsrGitUtils
     {
         /// <summary>
+        /// To use refresh token to access CSR, the user name is required to be this constant name.
+        /// </summary>
+        private const string CsrRefreshTokenAccessUserName = "VisualStudioUser";
+
+        /// <summary>
+        /// The Google Cloud Source Repositories url scheme + host part.
+        /// </summary>
+        public const string CsrUrlAuthority = "https://source.developers.google.com";
+
+        /// <summary>
         /// Clone a Google Cloud Source Repository locally.
         /// </summary>
         /// <param name="url">The repository remote URL.</param>
@@ -36,7 +45,8 @@ namespace GoogleCloudExtension.GitUtils
         /// A <seealso cref="GitRepository"/> object if clone is successful.
         /// Or null if it fails for some reason.
         /// </returns>
-        public static async Task<GitRepository> Clone(string url, string localPath)
+        /// <exception cref="GitCommandException">Throw when git command fails</exception>
+        public static async Task<GitRepository> CloneAsync(string url, string localPath)
         {
             if (Directory.Exists(localPath))
             {
@@ -45,14 +55,10 @@ namespace GoogleCloudExtension.GitUtils
 
             Directory.CreateDirectory(localPath);
 
-            // git clone https://host/myrepo/ c:\git\myrepo --config credential.helper=manager
-            string command = $"clone {url} {localPath} --config credential.helper=manager";
+            // git clone https://host/myrepo/ "c:\git\myrepo" --config credential.helper=manager
+            string command = $@"clone {url} ""{localPath}"" --config credential.helper=manager";
             var output = await GitRepository.RunGitCommandAsync(command, localPath);
-            Debug.WriteLine(output?.FirstOrDefault() ?? "");
-            if (output == null)
-            {
-                return null;    // Failed to clone
-            }
+            Debug.WriteLine(output.FirstOrDefault() ?? "");
             return await GitRepository.GetGitCommandWrapperForPathAsync(localPath);
         }
 
@@ -61,29 +67,66 @@ namespace GoogleCloudExtension.GitUtils
         /// </summary>
         /// <param name="url">The repository url.</param>
         /// <param name="refreshToken">Google cloud credential refresh token.</param>
-        /// <param name="useHttpPath">Set for the path of for host</param>
+        /// <param name="pathOption"><seealso cref="StoreCredentialPathOption"/> </param>
         /// <returns>
         /// True: if credential is stored successfully.
         /// Otherwise false.
         /// </returns>
-        public static bool StoreCredential(string url, string refreshToken, bool useHttpPath = false)
+        public static bool StoreCredential(
+            string url, 
+            string refreshToken, 
+            StoreCredentialPathOption pathOption)
         {
             url.ThrowIfNullOrEmpty(nameof(url));
-            refreshToken.ThrowIfNullOrEmpty(nameof(url));
+            refreshToken.ThrowIfNullOrEmpty(nameof(refreshToken));
 
             Uri uri = new Uri(url);
-            var uriPartial = useHttpPath ? UriPartial.Path : UriPartial.Authority;
+            UriPartial uriPartial;
+            switch(pathOption)
+            {
+                case StoreCredentialPathOption.UrlPath:
+                    uriPartial = UriPartial.Path;
+                    break;
+                case StoreCredentialPathOption.UrlHost:
+                    uriPartial = UriPartial.Authority;
+                    break;
+                default:
+                    throw new  ArgumentException(nameof(pathOption));
+            }
             return WindowsCredentialManager.Write(
                 $"git:{uri.GetLeftPart(uriPartial)}",
-                username: "VisualStudioUser",
+                username: CsrRefreshTokenAccessUserName,
                 password: refreshToken,
                 credentialType: WindowsCredentialManager.CredentialType.Generic,
                 persistenceType: WindowsCredentialManager.CredentialPersistence.LocalMachine);
         }
 
-        public static async Task<bool> SetUseHttpPath() =>
-            (await GitRepository.RunGitCommandAsync(
-                "config --global credential.https://source.developers.google.com.useHttpPath true", 
-                Directory.GetCurrentDirectory())) != null;
+        /// <summary>
+        /// Set global git config useHttpPath for CSR host.
+        /// Refer to https://git-scm.com/docs/gitcredentials
+        /// </summary>
+        public static Task SetUseHttpPathAsync() =>
+            GitRepository.RunGitCommandAsync(
+                $"config --global credential.{CsrUrlAuthority}.useHttpPath true",
+                Directory.GetCurrentDirectory());
+
+        /// <summary>
+        /// Refer to <seealso cref="StoreCredential(string, string, StoreCredentialPathOption)"/>.
+        /// Store credential path option.
+        /// </summary>
+        public enum StoreCredentialPathOption
+        {
+            /// <summary>
+            /// Store credential for the host. 
+            /// Example: https://source.developers.google.com
+            /// </summary>
+            UrlHost,
+
+            /// <summary>
+            /// Store credential for the UrlPath. 
+            /// Example: https://source.developers.google.com/p/project-id/r/repo1 
+            /// </summary>
+            UrlPath
+        }
     }
 }

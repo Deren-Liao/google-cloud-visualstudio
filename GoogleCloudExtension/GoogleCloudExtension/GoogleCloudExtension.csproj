@@ -127,7 +127,6 @@
     <Compile Include="Analytics\Events\UpgradeEvent.cs" />
     <Compile Include="AttachDebuggerDialog\AttachDebuggerContext.cs" />
     <Compile Include="AttachDebuggerDialog\AttachDebuggerSettingsStore.cs" />
-    <Compile Include="AttachDebuggerDialog\AttachDebuggerException.cs" />
     <Compile Include="AttachDebuggerDialog\AttachDebuggerSettings.cs" />
     <Compile Include="AttachDebuggerDialog\AttachDebuggerStepBase.cs" />
     <Compile Include="AttachDebuggerDialog\AttachDebuggerWindow.cs" />
@@ -204,7 +203,9 @@
       <DependentUpon>CsrGitSetupContent.xaml</DependentUpon>
     </Compile>
     <Compile Include="CloudSourceRepositories\CsrGitSetupViewModel.cs" />
+    <Compile Include="CloudSourceRepositories\CsrReposViewModel.cs" />
     <Compile Include="CloudSourceRepositories\CsrUtils.cs" />
+    <Compile Include="CloudSourceRepositories\AsyncRepositories.cs" />
     <Compile Include="TemplateWizards\Dialogs\ProjectIdDialog\IPickProjectIdWindow.cs" />
     <Compile Include="Utils\DataSourceFactories.cs" />
     <Compile Include="CloudExplorer\DisabledApiWarning.cs" />
@@ -246,7 +247,6 @@
     <Compile Include="CloudSourceRepositories\CsrReposContent.xaml.cs">
       <DependentUpon>CsrReposContent.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CloudSourceRepositories\CsrReposViewModel.cs" />
     <Compile Include="CloudSourceRepositories\CsrSectionControl.xaml.cs">
       <DependentUpon>CsrSectionControl.xaml</DependentUpon>
     </Compile>

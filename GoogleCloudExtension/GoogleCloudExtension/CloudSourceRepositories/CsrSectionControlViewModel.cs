@@ -232,16 +232,18 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             bool ret = false;
             try
             {
-                ret = await CsrGitUtils.SetUseHttpPath();
+                await CsrGitUtils.SetUseHttpPathAsync();
+                ret = true;
             }
-            catch (Exception)
+            catch (GitCommandException)
             {
+                ret = false;
             }
             if (!ret)
             {
                 teamExplorer.ShowMessage(
                     "Failed to initialize git. Check your Git for Windows installation. [Retry]",
-                    new ProtectedCommand(taskHandler: () => SetUseHttpPath(teamExplorer)));
+                    new ProtectedAsyncCommand(() => SetUseHttpPath(teamExplorer)));
             }
             return ret;
         }
@@ -253,7 +255,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                 if (!CsrGitUtils.StoreCredential(
                     "https://source.developers.google.com",
                     CredentialsStore.Default.CurrentAccount.RefreshToken,
-                    useHttpPath: false))
+                    CsrGitUtils.StoreCredentialPathOption.UrlHost))
                 {
                     teamExplorer.ShowMessage(
                         "Failed to initialize git. Check your Git for Windows installation. [Retry]",
