@@ -103,10 +103,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                 Content = _reposContent;
                 if (s_currentAccount != CredentialsStore.Default.CurrentAccount?.AccountName)
                 {
-                    if (!SetGitCredential(_teamExplorerService))
-                    {
-                        // TODO: Show error dialog.
-                    }
+                    SetGitCredential(_teamExplorerService);
                     // Continue nevertheless SetGitCredential succeeds or not.
                     _reposViewModel.Refresh();
                 }
