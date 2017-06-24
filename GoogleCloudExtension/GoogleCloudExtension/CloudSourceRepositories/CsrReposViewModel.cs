@@ -111,7 +111,11 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         public CsrReposViewModel(ITeamExplorerUtils teamExplorer)
         {
             _teamExplorer = teamExplorer.ThrowIfNull(nameof(teamExplorer));
-            ListDoubleClickCommand = new ProtectedCommand(SetSelectedRepoActive);
+            ListDoubleClickCommand = new ProtectedCommand(() =>
+            {
+                SetRepoActive(SelectedRepository);
+                _teamExplorer.ShowHomeSection();
+            });
             CloneCreateRepoCommand = new ProtectedAsyncCommand(CloneCreateRepoAsync);
         }
 
@@ -126,16 +130,15 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// <summary>
         /// When user double clicks at a repository, set it as active repo.
         /// </summary>
-        public void SetSelectedRepoActive()
+        public void SetRepoActive(RepoItemViewModel repo)
         {
-            if (SelectedRepository?.IsActiveRepo == false)
+            if (repo?.IsActiveRepo == false)
             {
-                SetCurrentRepo(SelectedRepository.LocalPath);
+                SetCurrentRepo(repo.LocalPath);
 
                 // Note, the order is critical.
                 // When switching to HomeSection, current "this" object is destroyed.
-                ActiveRepo = SelectedRepository;
-                _teamExplorer.ShowHomeSection();
+                ActiveRepo = repo;
             }
         }
 
@@ -143,7 +146,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// Set a repository as active, show the item in Bold font.
         /// </summary>
         /// <param name="localPath">The repository local path</param>
-        public void SetActiveRepo(string localPath)
+        public void ShowActiveRepo(string localPath)
         {
             var repoItem = Repositories?.FirstOrDefault(
                 x => String.Compare(x.LocalPath, localPath, StringComparison.OrdinalIgnoreCase) == 0);
@@ -185,25 +188,24 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// </summary>
         private async Task ListRepositoryAsync()
         {
-            if (Loading)
+            if (!IsReady)
             {
                 return;
             }
 
-            IsReady = false;
-            Loading = true;
-
+            // GetProjectsAsync set/reset IsReady, put it before the following IsReady flag
             var projects = await GetProjectsAsync();
+
+            IsReady = false;
             Repositories = new ObservableCollection<RepoItemViewModel>();
             try
             {
                 await AddLocalReposAsync(await GetLocalGitRepositories(), projects);
 
-                SetActiveRepo(_teamExplorer.GetActiveRepository());
+                ShowActiveRepo(_teamExplorer.GetActiveRepository());
             }
             finally
             {
-                Loading = false;
                 IsReady = true;
             }
         }
@@ -300,48 +302,44 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                 return;
             }
 
-            var repoItem = CsrCloneWindow.PromptUser(projects);
-            if (repoItem != null)
+            var result = CsrCloneWindow.PromptUser(projects);
+            if (result != null)
             {
+                var repoItem = result.RepoItem;
                 if (Repositories == null)
                 {
                     Repositories = new ObservableCollection<RepoItemViewModel>();
                 }
                 Repositories.Add(repoItem);
-            }
-        }
 
-        private async Task CreateAsync()
-        {
-            var projects = await GetProjectsAsync();
-            if (!projects.Any())
-            {
-                return;
-            }
-            var repoItem = CsrCreateWindow.PromptUser(projects);
-            if (repoItem != null)
-            {
-                if (repoItem != null)
+                // Created a new repo and cloned locally
+                if (result.JustCreatedRepo)
                 {
-                    if (Repositories == null)
-                    {
-                        Repositories = new ObservableCollection<RepoItemViewModel>();
-                    }
-                    Repositories.Add(repoItem);
-                    SetCurrentRepo(repoItem.LocalPath);
+                    SetRepoActive(repoItem);
 
                     var msg = string.Format("The repository {0} has been created successfully.", repoItem.Name);
                     msg += " " + string.Format("[Create a new project or solution]({0}) now.", repoItem.LocalPath);
 
                     _teamExplorer.ShowMessage(msg,
-                        command: new ProtectedCommand(handler: () =>
-                        {
-                            SetDefaultProjectPath(repoItem.LocalPath);
-                            var serviceProvider = ShellUtils.GetGloblalServiceProvider();
-                            var solution = serviceProvider.GetService(typeof(SVsSolution)) as IVsSolution;
-                            solution?.CreateNewProjectViaDlg(null, null, 0);
-                            _teamExplorer.ShowHomeSection();
-                        }));
+                    command: new ProtectedCommand(handler: () =>
+                    {
+                        SetDefaultProjectPath(repoItem.LocalPath);
+                        var serviceProvider = ShellUtils.GetGloblalServiceProvider();
+                        var solution = serviceProvider.GetService(typeof(SVsSolution)) as IVsSolution;
+                        solution?.CreateNewProjectViaDlg(null, null, 0);
+                        _teamExplorer.ShowHomeSection();
+                    }));
+                }
+                else
+                {
+                    var msg = string.Format("The repository {0} has been cloned successfully.", repoItem.Name);
+                    msg += " " + string.Format("[Switch to the repo]({0}) now.", repoItem.LocalPath);
+
+                    _teamExplorer.ShowMessage(msg,
+                    command: new ProtectedCommand(handler: () =>
+                    {
+                        SetRepoActive(repoItem);
+                    }));
                 }
             }
         }
@@ -413,8 +411,6 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             }
 
             IsReady = false;
-            Loading = true;
-
             try
             {
                 var projects = await resourceManager.GetSortedActiveProjectsAsync();
@@ -429,7 +425,6 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             finally
             {
                 IsReady = true;
-                Loading = false;
             }
         }
     }

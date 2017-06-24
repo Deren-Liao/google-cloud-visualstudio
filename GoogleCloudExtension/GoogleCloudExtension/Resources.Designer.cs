@@ -2266,7 +2266,7 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add repo.
+        ///   Looks up a localized string similar to Add new.
         /// </summary>
         public static string CsrAddRepoButtonCaption {
             get {
@@ -2356,15 +2356,6 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to There is no project..
-        /// </summary>
-        public static string CsrCloneNoProjectMessage {
-            get {
-                return ResourceManager.GetString("CsrCloneNoProjectMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Browse.
         /// </summary>
         public static string CsrClonePathBrowseButtonCaption {
@@ -2419,15 +2410,6 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Connect....
-        /// </summary>
-        public static string CsrConnectLinkButtonCaption {
-            get {
-                return ResourceManager.GetString("CsrConnectLinkButtonCaption", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Google Cloud Source Repositories.
         /// </summary>
         public static string CsrConnectSectionTitle {
@@ -2473,20 +2455,20 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Disconnect.
-        /// </summary>
-        public static string CsrDisconnectLinkButtonCaption {
-            get {
-                return ResourceManager.GetString("CsrDisconnectLinkButtonCaption", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Loading repositories ....
         /// </summary>
         public static string CsrLoadingRepoMessage {
             get {
                 return ResourceManager.GetString("CsrLoadingRepoMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current selected GCP account has no active project..
+        /// </summary>
+        public static string CsrNoProjectMessage {
+            get {
+                return ResourceManager.GetString("CsrNoProjectMessage", resourceCulture);
             }
         }
         
@@ -2550,6 +2532,15 @@ namespace GoogleCloudExtension {
         public static string CsrRepositorySelectionLabel {
             get {
                 return ResourceManager.GetString("CsrRepositorySelectionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sign in.
+        /// </summary>
+        public static string CsrSignInLinkButtonCaption {
+            get {
+                return ResourceManager.GetString("CsrSignInLinkButtonCaption", resourceCulture);
             }
         }
         
@@ -3747,6 +3738,15 @@ namespace GoogleCloudExtension {
         public static string GenerateConfigurationOverwritePromptTitle {
             get {
                 return ResourceManager.GetString("GenerateConfigurationOverwritePromptTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Git Credential Manager for Windows (git-credeitnal-manager) is not installed correctly.
+        /// </summary>
+        public static string GitUtilsGitCredentialManagerNotInstalledMessage {
+            get {
+                return ResourceManager.GetString("GitUtilsGitCredentialManagerNotInstalledMessage", resourceCulture);
             }
         }
         

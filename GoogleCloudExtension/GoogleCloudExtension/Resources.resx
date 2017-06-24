@@ -2679,8 +2679,8 @@
     <value>_Clone to:</value>
     <comment>Label to the input local path text box</comment>
   </data>
-  <data name="CsrCloneNoProjectMessage" xml:space="preserve">
-    <value>There is no project.</value>
+  <data name="CsrNoProjectMessage" xml:space="preserve">
+    <value>Current selected GCP account has no active project.</value>
     <comment>Prompt message if the user account has no any project</comment>
   </data>
   <data name="CsrClonePathBrowseButtonCaption" xml:space="preserve">
@@ -2759,10 +2759,9 @@
     <comment>Duplicate repo name error message</comment>
   </data>
   <data name="CsrAddRepoButtonCaption" xml:space="preserve">
-    <value>Add repo</value>
+    <value>Add new</value>
     <comment>Caption of add repository button</comment>
   </data>
-
   <data name="GitUtilsGitCredentialManagerNotInstalledMessage" xml:space="preserve">
     <value>Git Credential Manager for Windows (git-credeitnal-manager) is not installed correctly</value>
     <comment>git crendential-manager is not found</comment>

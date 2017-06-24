@@ -178,7 +178,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         void ISectionViewModel.UpdateActiveRepo(string newRepoLocalPath)
         {
             Debug.WriteLine($"CsrSectionControlViewModel.UpdateActiveRepo {newRepoLocalPath}");
-            _reposViewModel?.SetActiveRepo(newRepoLocalPath);
+            _reposViewModel?.ShowActiveRepo(newRepoLocalPath);
         }
 
         void ISectionViewModel.Cleanup()

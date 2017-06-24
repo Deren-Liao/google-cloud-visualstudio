@@ -20,9 +20,6 @@
                 <ResourceDictionary Source="./CsrSectionStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <utils:VisibilityConverter x:Key="VisibilityConverter" />
-            <utils:NullEmptyInvisibleConverter x:Key="NullEmptyInvisibleConverter" />
-
         </ResourceDictionary>
     </UserControl.Resources>
     
@@ -49,8 +46,7 @@
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
             VirtualizingPanel.IsVirtualizing="True"
             VirtualizingPanel.ScrollUnit="Pixel"
-            VirtualizingPanel.IsVirtualizingWhenGrouping="True" 
-            Visibility="{Binding Repositories, Converter={StaticResource NullEmptyInvisibleConverter}}" >
+            VirtualizingPanel.IsVirtualizingWhenGrouping="True" >
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -148,7 +144,7 @@
         <controls:DotsProgressIndicator
             Margin="6"
             HorizontalAlignment="Left"
-            Visibility="{Binding Loading, Converter={StaticResource VisibilityConverter}}" />
+            Visibility="{Binding IsReady, Converter={utils:VisibilityConverter IsNegated=True}}" />
         
     </StackPanel>
 
