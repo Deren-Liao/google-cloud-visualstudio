@@ -2266,6 +2266,60 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add repo.
+        /// </summary>
+        public static string CsrAddRepoButtonCaption {
+            get {
+                return ResourceManager.GetString("CsrAddRepoButtonCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add an empty repository for project {0}..
+        /// </summary>
+        public static string CsrAddRepoForProjectMessageFormat {
+            get {
+                return ResourceManager.GetString("CsrAddRepoForProjectMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Google Cloud Console.
+        /// </summary>
+        public static string CsrAddRepoVisitCsrLinkCaption {
+            get {
+                return ResourceManager.GetString("CsrAddRepoVisitCsrLinkCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For more options, visit.
+        /// </summary>
+        public static string CsrAddRepoVisitCsrLinkMessageFirstPart {
+            get {
+                return ResourceManager.GetString("CsrAddRepoVisitCsrLinkMessageFirstPart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add a new repository.
+        /// </summary>
+        public static string CsrAddRepoWindowTitle {
+            get {
+                return ResourceManager.GetString("CsrAddRepoWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clone or Create.
+        /// </summary>
+        public static string CsrCloneCreateLinkButtonCaption {
+            get {
+                return ResourceManager.GetString("CsrCloneCreateLinkButtonCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to clone the repository..
         /// </summary>
         public static string CsrCloneFailedMessage {
@@ -2280,15 +2334,6 @@ namespace GoogleCloudExtension {
         public static string CsrCloneFailedToSetCredentialMessage {
             get {
                 return ResourceManager.GetString("CsrCloneFailedToSetCredentialMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Clone.
-        /// </summary>
-        public static string CsrCloneLinkButtonCaption {
-            get {
-                return ResourceManager.GetString("CsrCloneLinkButtonCaption", resourceCulture);
             }
         }
         
@@ -2311,11 +2356,11 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to There is no project.
+        ///   Looks up a localized string similar to There is no project..
         /// </summary>
-        public static string CsrCloneNoProject {
+        public static string CsrCloneNoProjectMessage {
             get {
-                return ResourceManager.GetString("CsrCloneNoProject", resourceCulture);
+                return ResourceManager.GetString("CsrCloneNoProjectMessage", resourceCulture);
             }
         }
         
@@ -2347,6 +2392,15 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clone.
+        /// </summary>
+        public static string CsrCloneRepoButtonCaption {
+            get {
+                return ResourceManager.GetString("CsrCloneRepoButtonCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set the local repository path. {path-input}\{repo-name} is used as the destination path.
         /// </summary>
         public static string CsrCloneToTextBoxToolTip {
@@ -2365,6 +2419,15 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connect....
+        /// </summary>
+        public static string CsrConnectLinkButtonCaption {
+            get {
+                return ResourceManager.GetString("CsrConnectLinkButtonCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Google Cloud Source Repositories.
         /// </summary>
         public static string CsrConnectSectionTitle {
@@ -2376,9 +2439,9 @@ namespace GoogleCloudExtension {
         /// <summary>
         ///   Looks up a localized string similar to Local Path.
         /// </summary>
-        public static string CsrContextMenuLocalPathLabel {
+        public static string CsrContextMenuRepoLocalPathLabel {
             get {
-                return ResourceManager.GetString("CsrContextMenuLocalPathLabel", resourceCulture);
+                return ResourceManager.GetString("CsrContextMenuRepoLocalPathLabel", resourceCulture);
             }
         }
         
@@ -2392,38 +2455,11 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create.
-        /// </summary>
-        public static string CsrCreateLinkButtonCaption {
-            get {
-                return ResourceManager.GetString("CsrCreateLinkButtonCaption", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to After creation, goto GCP console to mirror repository from GitHub or Gitbuckets (git only)..
-        /// </summary>
-        public static string CsrCreateMirrorAfterPublish {
-            get {
-                return ResourceManager.GetString("CsrCreateMirrorAfterPublish", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Repository name.
         /// </summary>
-        public static string CsrCreateRepoNameTextBoxLabel {
+        public static string CsrCreateRepoNameTextBoxFieldName {
             get {
-                return ResourceManager.GetString("CsrCreateRepoNameTextBoxLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Create Google Cloud Source Repositories.
-        /// </summary>
-        public static string CsrCreateWindowTitle {
-            get {
-                return ResourceManager.GetString("CsrCreateWindowTitle", resourceCulture);
+                return ResourceManager.GetString("CsrCreateRepoNameTextBoxFieldName", resourceCulture);
             }
         }
         
@@ -2437,6 +2473,15 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disconnect.
+        /// </summary>
+        public static string CsrDisconnectLinkButtonCaption {
+            get {
+                return ResourceManager.GetString("CsrDisconnectLinkButtonCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Loading repositories ....
         /// </summary>
         public static string CsrLoadingRepoMessage {
@@ -2446,16 +2491,7 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current GCP account has no project..
-        /// </summary>
-        public static string CsrNoProjectMessage {
-            get {
-                return ResourceManager.GetString("CsrNoProjectMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Empty list, choose another project.
+        ///   Looks up a localized string similar to Empty list,  add a new repository or choose another project.
         /// </summary>
         public static string CsrProjectContainsNoRepoMessage {
             get {
@@ -2473,11 +2509,29 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The repository name already exists.
+        /// </summary>
+        public static string CsrRepoNameExistsMessage {
+            get {
+                return ResourceManager.GetString("CsrRepoNameExistsMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Repo name must start with A-Z, a-z, 0-9 or _.
         /// </summary>
         public static string CsrRepoNameStartWithMessageFormat {
             get {
                 return ResourceManager.GetString("CsrRepoNameStartWithMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Repository Name:.
+        /// </summary>
+        public static string CsrRepoNameTextBoxLabel {
+            get {
+                return ResourceManager.GetString("CsrRepoNameTextBoxLabel", resourceCulture);
             }
         }
         
@@ -2496,15 +2550,6 @@ namespace GoogleCloudExtension {
         public static string CsrRepositorySelectionLabel {
             get {
                 return ResourceManager.GetString("CsrRepositorySelectionLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sign in.
-        /// </summary>
-        public static string CsrSignInLinkButtonCaption {
-            get {
-                return ResourceManager.GetString("CsrSignInLinkButtonCaption", resourceCulture);
             }
         }
         
@@ -3702,15 +3747,6 @@ namespace GoogleCloudExtension {
         public static string GenerateConfigurationOverwritePromptTitle {
             get {
                 return ResourceManager.GetString("GenerateConfigurationOverwritePromptTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Git Credential Manager for Windows (git-credeitnal-manager) is not installed correctly.
-        /// </summary>
-        public static string GitUtilsGitCredentialManagerNotInstalledMessage {
-            get {
-                return ResourceManager.GetString("GitUtilsGitCredentialManagerNotInstalledMessage", resourceCulture);
             }
         }
         

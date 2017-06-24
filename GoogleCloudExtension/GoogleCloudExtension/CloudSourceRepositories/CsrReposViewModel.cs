@@ -101,12 +101,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// <summary>
         /// Responds to Clone command
         /// </summary>
-        public ICommand CloneCommand { get; }
-
-        /// <summary>
-        /// Responds to Create command.
-        /// </summary>
-        public ICommand CreateCommand { get; }
+        public ICommand CloneCreateRepoCommand { get; }
 
         /// <summary>
         /// Responds to list view double click event
@@ -117,8 +112,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         {
             _teamExplorer = teamExplorer.ThrowIfNull(nameof(teamExplorer));
             ListDoubleClickCommand = new ProtectedCommand(SetSelectedRepoActive);
-            CloneCommand = new ProtectedAsyncCommand(CloneAsync);
-            CreateCommand = new ProtectedAsyncCommand(CreateAsync);
+            CloneCreateRepoCommand = new ProtectedAsyncCommand(CloneCreateRepoAsync);
         }
 
         /// <summary>
@@ -298,7 +292,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             return localRepos;
         }
 
-        private async Task CloneAsync()
+        private async Task CloneCreateRepoAsync()
         {
             var projects = await GetProjectsAsync();
             if (!projects.Any())
