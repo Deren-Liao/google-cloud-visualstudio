@@ -339,6 +339,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                     command: new ProtectedCommand(handler: () =>
                     {
                         SetRepoActive(repoItem);
+                        _teamExplorer.ShowHomeSection();
                     }));
                 }
             }
