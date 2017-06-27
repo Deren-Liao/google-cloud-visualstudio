@@ -23,10 +23,10 @@
     </UserControl.Resources>
 
     <UserControl.Style>
-        <Binding Source="{StaticResource CommonDialogStyleDynamicSmall}" />
+        <Binding Source="{StaticResource CommonDialogStyleDynamicSmallWide}" />
     </UserControl.Style>
 
-    <theming:CommonDialogWindowBaseContent HasBanner="True">
+    <theming:CommonDialogWindowBaseContent>
         <theming:CommonDialogWindowBaseContent.Buttons>
             <theming:DialogButtonInfo Caption="{x:Static ext:Resources.UiOkButtonCaption}"
                                       Command="{Binding OkCommand}"
@@ -45,15 +45,16 @@
                 x:Name="_repoNameTextBox"
                 Text="{Binding RepositoryName, UpdateSourceTrigger=PropertyChanged, 
                     ValidatesOnNotifyDataErrors=True, Mode=TwoWay}"
+                MaxLength="{Binding NameMaxLength}"
                 Style="{StaticResource CommonTextBoxStyle}"
                 Margin="0,0,5,0">
             </TextBox>
 
             <TextBlock 
                 Margin="0,5,0,0"
-                Style="{StaticResource CommonTextStyle}">
-                <Run Text="{Binding AddRepoForProjectMessage, Mode=OneWay}" />         
-                <Run Text="{x:Static ext:Resources.CsrAddRepoVisitCsrLinkMessageFirstPart}"/>
+                Style="{StaticResource CommonTextStyle}"
+                Text="{Binding AddRepoForProjectMessage}" />
+            <TextBlock>         
                 <Hyperlink Command="{Binding CsrLinkCommand}" 
                            Style="{StaticResource CommonHyperlinkStyle}">
                     <Run Text="{x:Static ext:Resources.CsrAddRepoVisitCsrLinkCaption}" />
