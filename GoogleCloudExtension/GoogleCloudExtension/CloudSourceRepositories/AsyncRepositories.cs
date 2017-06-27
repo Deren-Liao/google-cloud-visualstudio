@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Google.Apis.CloudSourceRepositories.v1.Data;
 using GoogleCloudExtension.Utils;
-using GoogleCloudExtension.Utils.Async;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,21 +22,22 @@ using System.Threading.Tasks;
 namespace GoogleCloudExtension.CloudSourceRepositories
 {
     /// <summary>
-    /// Retrieves a list of <seealso cref="Repo"/> objects by calling async task.
+    /// Retrieves a list of <seealso cref="RepoRepoWrapper"/> objects by calling async task.
     /// 
     /// The main goal is to allow user to choose different project while waiting for the list to be populated.
     /// Anytime, user can change project and then it calls StartListRepoTaskAsync to update the repo list.
     /// </summary>
     public class AsyncRepositories : Model
     {
-        internal static Func<string, Task<IList<Repo>>> GetCloudReposAsync = CsrUtils.GetCloudReposAsync;
-        private Task<IList<Repo>> _latestTask;
+        internal static Func<string, Task<IList<RepoWrapper>>> GetCloudReposAsync = CsrUtils.GetCloudReposAsync;
+        private Task<IList<RepoWrapper>> _latestTask;
 
         /// <summary>
-        /// Gets the list of Repo objects
+        /// Gets the list of RepoWrapper objects
         /// It can be null if list task is not started or not completed.
+        /// Note, use IList, do not use IEnumerable, it resets SelectedItem to first item in ComboBox.
         /// </summary>
-        public IList<Repo> Value => _latestTask?.IsCompleted ?? false ? _latestTask.Result : null;
+        public IList<RepoWrapper> Value => _latestTask?.IsCompleted ?? false ? _latestTask.Result : null;
 
         /// <summary>
         /// Returns the current repo list display option. Refer to <seealso cref="DisplayOptions"/>.

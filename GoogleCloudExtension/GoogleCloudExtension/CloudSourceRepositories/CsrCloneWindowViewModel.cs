@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using Google.Apis.CloudResourceManager.v1.Data;
-using Google.Apis.CloudSourceRepositories.v1.Data;
 using GoogleCloudExtension.Accounts;
 using GoogleCloudExtension.GitUtils;
 using GoogleCloudExtension.Utils;
@@ -36,9 +35,9 @@ namespace GoogleCloudExtension.CloudSourceRepositories
     {
         private readonly CsrCloneWindow _owner;
         private string _localPath;
-        private Repo _latestCreatedRepo;
+        private string _latestCreatedRepoName;
         private HashSet<string> _newReposList = new HashSet<string>();
-        private Repo _selectedRepo;
+        private RepoWrapper _selectedRepo;
         private IEnumerable<Project> _projects;
         private Project _selectedProject;
         private bool _isReady = true;
@@ -78,7 +77,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// <summary>
         /// Currently selected repository
         /// </summary>
-        public Repo SelectedRepository
+        public RepoWrapper SelectedRepository
         {
             get { return _selectedRepo; }
             set
@@ -159,10 +158,10 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                         RepositoriesAsync.DisplayState != AsyncRepositories.DisplayOptions.Pending;
 
                     // Set last created repo as default
-                    if (_latestCreatedRepo != null)
+                    if (_latestCreatedRepoName != null)
                     {
                         SelectedRepository = RepositoriesAsync.Value?
-                            .FirstOrDefault(x => x.Name == _latestCreatedRepo.Name);
+                            .FirstOrDefault(x => x.RepoName == _latestCreatedRepoName);
                         if (SelectedRepository != null)
                         {
                             break;  
@@ -180,10 +179,10 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         private async Task CloneAsync()
         {
             // If OkCommand is enabled, SelectedRepository and LocalPath is valid
-            string destPath = Path.Combine(LocalPath, SelectedRepository.GetRepoName());
+            string destPath = Path.Combine(LocalPath, SelectedRepository.RepoName);
 
             if (!CsrGitUtils.StoreCredential(
-                SelectedRepository.Url,
+                SelectedRepository.Repo.Url,
                 CredentialsStore.Default.CurrentAccount.RefreshToken,
                 CsrGitUtils.StoreCredentialPathOption.UrlPath))
             {
@@ -195,11 +194,11 @@ namespace GoogleCloudExtension.CloudSourceRepositories
 
             try
             {
-                GitRepository localRepo = await CsrGitUtils.CloneAsync(SelectedRepository.Url, destPath);
+                GitRepository localRepo = await CsrGitUtils.CloneAsync(SelectedRepository.Repo.Url, destPath);
                 Result = new CloneWindowResult
                 {
-                    RepoItem = new RepoItemViewModel(SelectedRepository, localRepo.Root),
-                    JustCreatedRepo = _newReposList.Contains(SelectedRepository.Name)
+                    RepoItem = new RepoItemViewModel(SelectedRepository.Repo, localRepo.Root),
+                    JustCreatedRepo = _newReposList.Contains(SelectedRepository.RepoName)
                 };
 
                 _owner.Close();
@@ -262,7 +261,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             }
             if (SelectedRepository != null)
             {
-                string destPath = Path.Combine(LocalPath, SelectedRepository.GetRepoName());
+                string destPath = Path.Combine(LocalPath, SelectedRepository.RepoName);
                 if (Directory.Exists(destPath) && !PathUtils.IsDirectoryEmpty(destPath))
                 {
                     yield return StringValidationResult.FromResource(
@@ -274,10 +273,12 @@ namespace GoogleCloudExtension.CloudSourceRepositories
 
         private void OpenCreateRepoDialog()
         {
-            _latestCreatedRepo = CsrAddRepoWindow.PromptUser(RepositoriesAsync.Value, SelectedProject);
-            if (_latestCreatedRepo != null)
+            // RepositoriesAsync.Value must not be null when "Create new repo" button is enabled.
+            var names = RepositoriesAsync.Value.Select(x => x.RepoName);
+            _latestCreatedRepoName = CsrAddRepoWindow.PromptUser(names, SelectedProject)?.GetRepoName();
+            if (_latestCreatedRepoName != null)
             {
-                _newReposList.Add(_latestCreatedRepo.Name);
+                _newReposList.Add(_latestCreatedRepoName);
                 // Update the repos list
                 ErrorHandlerUtils.HandleAsyncExceptions(
                     () => RepositoriesAsync.StartListRepoTaskAsync(_selectedProject.ProjectId));

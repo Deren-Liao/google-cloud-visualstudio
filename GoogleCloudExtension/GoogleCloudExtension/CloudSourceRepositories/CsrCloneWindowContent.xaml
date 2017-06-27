@@ -62,8 +62,8 @@
                         Margin="5,0,0,0"
                         Content="{x:Static ext:Resources.CsrAddRepoButtonCaption}"
                         Style="{StaticResource CommonButtonStandardStyle}"
-                        Command="{Binding CreateRepoCommand}"
-                        />
+                        Command="{Binding CreateRepoCommand}" />
+
                 <ContentControl>
                     <ContentControl.Resources>
                         <!-- Show text "empty list, choose another project" -->
@@ -91,7 +91,7 @@
                             ItemsSource="{Binding RepositoriesAsync.Value}"
                             SelectedItem="{Binding SelectedRepository}"
                             IsSynchronizedWithCurrentItem="True"
-                            DisplayMemberPath="Name" 
+                            DisplayMemberPath="RepoName" 
                             IsTextSearchEnabled="True"
                             Style="{StaticResource CommonComboBoxStyle}"/>
                     </ContentControl.Resources>

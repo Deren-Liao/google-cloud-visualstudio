@@ -27,9 +27,10 @@ namespace GoogleCloudExtension.CloudSourceRepositories
     {
         private CsrAddRepoWindowViewModel ViewModel { get; }
 
-        private CsrAddRepoWindow(IList<Repo> repos, Project project) : base(StringResources.CsrAddRepoWindowTitle)
+        private CsrAddRepoWindow(IEnumerable<string> repoNameList, Project project)
+            : base(StringResources.CsrAddRepoWindowTitle)
         {
-            ViewModel = new CsrAddRepoWindowViewModel(this, repos, project);
+            ViewModel = new CsrAddRepoWindowViewModel(this, repoNameList, project);
             Content = new CsrAddRepoWindowContent { DataContext = ViewModel };
         }
 
@@ -41,12 +42,12 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// <summary>
         /// Create Google Cloud Source Repository.
         /// </summary>
-        /// <param name="repos">A list of existing repos.</param>
+        /// <param name="repoNameList">A list of existing repos.</param>
         /// <param name="project">The GCP project.</param>
         /// <returns>The new repo object.</returns>
-        public static Repo PromptUser(IList<Repo> repos, Project project)
+        public static Repo PromptUser(IEnumerable<string> repoNameList, Project project)
         {
-            var dialog = new CsrAddRepoWindow(repos, project);
+            var dialog = new CsrAddRepoWindow(repoNameList, project);
             dialog.ShowModal();
             return dialog.ViewModel.Result;
         }
