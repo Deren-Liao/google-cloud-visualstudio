@@ -17,11 +17,11 @@ using System.Windows.Controls;
 namespace GoogleCloudExtension.CloudSourceRepositories
 {
     /// <summary>
-    /// Interaction logic for CsrGitSetupContent.xaml
+    /// Interaction logic for CsrGitSetupWarningContent.xaml
     /// </summary>
-    public partial class CsrGitSetupContent : UserControl
+    public partial class CsrGitSetupWarningContent : UserControl
     {
-        public CsrGitSetupContent()
+        public CsrGitSetupWarningContent()
         {
             InitializeComponent();
         }

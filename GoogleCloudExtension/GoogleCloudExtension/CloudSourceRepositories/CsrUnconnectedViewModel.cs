@@ -32,7 +32,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         public CsrUnconnectedViewModel(CsrSectionControlViewModel parent)
         {
             _parent = parent;
-            ConnectCommand = new ProtectedAsyncCommand(parent.SignIn);
+            ConnectCommand = new ProtectedCommand(parent.SignIn);
         }
     }
 }

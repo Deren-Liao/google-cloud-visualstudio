@@ -12,24 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GoogleCloudExtension.Accounts;
 using GoogleCloudExtension.GitUtils;
-using GoogleCloudExtension.ManageAccounts;
-using GoogleCloudExtension.TeamExplorerExtension;
 using GoogleCloudExtension.Utils;
 using System;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace GoogleCloudExtension.CloudSourceRepositories
 {
     /// <summary>
-    /// View model to CsrUnconnectedContent.xaml
+    /// View model to CsrGitSetupWarningContent.xaml
     /// </summary>
-    public class CsrGitSetupViewModel : ViewModelBase
+    public class CsrGitSetupWarningViewModel : ViewModelBase
     {
         private static string s_error;
 
@@ -59,7 +54,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// </summary>
         public ICommand TestCommand { get; }
 
-        public CsrGitSetupViewModel(CsrSectionControlViewModel parent)
+        public CsrGitSetupWarningViewModel(CsrSectionControlViewModel parent)
         {
             _parent = parent;
             InstallGitCommand = new ProtectedCommand(
@@ -75,7 +70,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                 await CheckInstallation();
                 if (GitInstallationVerified)
                 {
-                    _parent.ContinueInitialize();
+                    _parent.OnGitInstallationCheckSuccess();
                 }
                 else
                 {
