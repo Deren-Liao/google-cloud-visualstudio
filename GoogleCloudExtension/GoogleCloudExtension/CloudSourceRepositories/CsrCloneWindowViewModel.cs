@@ -35,9 +35,9 @@ namespace GoogleCloudExtension.CloudSourceRepositories
     {
         private readonly CsrCloneWindow _owner;
         private string _localPath;
+        private Repo _selectedRepo;
         private string _latestCreatedRepoName;
         private HashSet<string> _newReposList = new HashSet<string>();
-        private RepoWrapper _selectedRepo;
         private IEnumerable<Project> _projects;
         private Project _selectedProject;
         private bool _isReady = true;
@@ -161,7 +161,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                     if (_latestCreatedRepoName != null)
                     {
                         SelectedRepository = RepositoriesAsync.Value?
-                            .FirstOrDefault(x => x.RepoName == _latestCreatedRepoName);
+                            .FirstOrDefault(x => x.Name == _latestCreatedRepoName);
                         if (SelectedRepository != null)
                         {
                             break;  
@@ -273,12 +273,10 @@ namespace GoogleCloudExtension.CloudSourceRepositories
 
         private void OpenCreateRepoDialog()
         {
-            // RepositoriesAsync.Value must not be null when "Create new repo" button is enabled.
-            var names = RepositoriesAsync.Value.Select(x => x.RepoName);
-            _latestCreatedRepoName = CsrAddRepoWindow.PromptUser(names, SelectedProject)?.GetRepoName();
-            if (_latestCreatedRepoName != null)
+            _latestCreatedRepo = CsrAddRepoWindow.PromptUser(RepositoriesAsync.Value, SelectedProject);
+            if (_latestCreatedRepo != null)
             {
-                _newReposList.Add(_latestCreatedRepoName);
+                _newReposList.Add(_latestCreatedRepo.Name);
                 // Update the repos list
                 ErrorHandlerUtils.HandleAsyncExceptions(
                     () => RepositoriesAsync.StartListRepoTaskAsync(_selectedProject.ProjectId));

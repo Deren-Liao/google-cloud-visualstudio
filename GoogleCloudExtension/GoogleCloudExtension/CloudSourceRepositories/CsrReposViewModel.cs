@@ -103,6 +103,11 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         public ICommand CloneCreateRepoCommand { get; }
 
         /// <summary>
+        /// Responds to Disconnect command
+        /// </summary>
+        public ICommand DisconnectCommand { get; }
+
+        /// <summary>
         /// Responds to list view double click event
         /// </summary>
         public ICommand ListDoubleClickCommand { get; }

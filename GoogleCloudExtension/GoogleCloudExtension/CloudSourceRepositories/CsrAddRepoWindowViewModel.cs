@@ -33,7 +33,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
     {
         private static readonly Regex s_repoNameRegex = new Regex("^[a-zA-Z0-9_-]*$");
         private const char RepoNameExcludingCharacter = '-';
-        private readonly IEnumerable<string> _repoNameList;
+        private readonly IList<Repo> _repos;
         private readonly Project _project;
         private readonly CsrAddRepoWindow _owner;
         private string _repoName;
@@ -90,10 +90,10 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// </summary>
         public Repo Result { get; private set; }
 
-        public CsrAddRepoWindowViewModel(CsrAddRepoWindow owner, IEnumerable<string> repoNameList, Project project)
+        public CsrAddRepoWindowViewModel(CsrAddRepoWindow owner, IList<Repo> repos, Project project)
         {
             _owner = owner.ThrowIfNull(nameof(owner));
-            _repoNameList = repoNameList.ThrowIfNull(nameof(repoNameList));
+            _repos = repos.ThrowIfNull(nameof(repos));
             _project = project.ThrowIfNull(nameof(project));
             OkCommand = new ProtectedAsyncCommand(CreateRepoAsync, canExecuteCommand: false);
             CsrLinkCommand = new ProtectedCommand(() => Process.Start(CsrConsoleLink));
@@ -148,7 +148,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                 yield return StringValidationResult.FromResource(nameof(Resources.CsrRepoNameLengthLimitMessage));
             }
 
-            if (_repoNameList.Contains(name, StringComparer.InvariantCultureIgnoreCase))
+            if (_repos.Any(x => String.Compare(x.GetRepoName(), name, ignoreCase: true) == 0))
             {
                 yield return StringValidationResult.FromResource(nameof(Resources.CsrRepoNameExistsMessage));
             }

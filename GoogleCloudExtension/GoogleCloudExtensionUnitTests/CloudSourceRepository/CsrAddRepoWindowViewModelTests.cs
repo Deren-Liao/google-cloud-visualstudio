@@ -27,7 +27,7 @@ namespace GoogleCloudExtensionUnitTests.CloudSourceRepository
     [TestClass]
     public class CsrAddRepoWindowViewModelTests
     {
-        private IEnumerable<string> _testRepoNames;
+        private IList<Repo> _testRepos;
         private CsrAddRepoWindowViewModel _testViewModel;
         private Mock<CsrAddRepoWindow> _addRepoWindowMock;
         private Mock<Project> _projectMock;
@@ -36,10 +36,10 @@ namespace GoogleCloudExtensionUnitTests.CloudSourceRepository
         public void Initialize()
         {
             _addRepoWindowMock = new Mock<CsrAddRepoWindow>();
-            _testRepoNames = new List<string>();
+            _testRepos = new List<Repo>();
             _projectMock = new Mock<Project>();
             _testViewModel = new CsrAddRepoWindowViewModel(
-                _addRepoWindowMock.Object, _testRepoNames, _projectMock.Object);
+                _addRepoWindowMock.Object, _testRepos, _projectMock.Object);
         }
 
         [TestMethod]
