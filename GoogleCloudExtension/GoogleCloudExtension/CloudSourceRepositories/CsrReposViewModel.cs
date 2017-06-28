@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Google.Apis.CloudResourceManager.v1.Data;
+using Google.Apis.CloudSourceRepositories.v1.Data;
 using GoogleCloudExtension.DataSources;
 using GoogleCloudExtension.GitUtils;
 using GoogleCloudExtension.TeamExplorerExtension;
@@ -219,8 +220,8 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// </summary>
         private async Task AddLocalReposAsync(IList<GitRepository> localRepos, IList<Project> projects)
         {
-            Dictionary<string, IEnumerable<RepoWrapper>> projectRepos
-                = new Dictionary<string, IEnumerable<RepoWrapper>>(StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, IEnumerable<Repo>> projectRepos
+                = new Dictionary<string, IEnumerable<Repo>>(StringComparer.OrdinalIgnoreCase);
             foreach (var localGitRepo in localRepos)
             {
                 IList<string> remoteUrls = await localGitRepo.GetRemotesUrls();
@@ -239,18 +240,18 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                         Debug.WriteLine($"{projectId} repos does not contain {url}");
                         continue;
                     }
-                    Repositories.Add(new RepoItemViewModel(cloudRepo.Repo, localGitRepo.Root));
+                    Repositories.Add(new RepoItemViewModel(cloudRepo, localGitRepo.Root));
                     break;
                 }
             }
         }
 
-        private async Task<RepoWrapper> TryGetCloudRepoAsync(
+        private async Task<Repo> TryGetCloudRepoAsync(
             string url, 
             string projectId, 
-            Dictionary<string, IEnumerable<RepoWrapper>> projectReposMap)
+            Dictionary<string, IEnumerable<Repo>> projectReposMap)
         {
-            IEnumerable<RepoWrapper> cloudRepos;
+            IEnumerable<Repo> cloudRepos;
             Debug.WriteLine($"Check project id {projectId}");
             if (!projectReposMap.TryGetValue(projectId, out cloudRepos))
             {
@@ -275,7 +276,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             }
 
             return cloudRepos.FirstOrDefault(
-                x => String.Compare(x.Repo.Url, url, StringComparison.OrdinalIgnoreCase) == 0);
+                x => String.Compare(x.Url, url, StringComparison.OrdinalIgnoreCase) == 0);
         }
 
         /// <summary>

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Google.Apis.CloudSourceRepositories.v1.Data;
 using GoogleCloudExtension.Utils;
 using System;
 using System.Collections.Generic;
@@ -29,15 +30,14 @@ namespace GoogleCloudExtension.CloudSourceRepositories
     /// </summary>
     public class AsyncRepositories : Model
     {
-        internal static Func<string, Task<IList<RepoWrapper>>> GetCloudReposAsync = CsrUtils.GetCloudReposAsync;
-        private Task<IList<RepoWrapper>> _latestTask;
+        internal static Func<string, Task<IList<Repo>>> GetCloudReposAsync = CsrUtils.GetCloudReposAsync;
+        private Task<IList<Repo>> _latestTask;
 
         /// <summary>
         /// Gets the list of RepoWrapper objects
         /// It can be null if list task is not started or not completed.
-        /// Note, use IList, do not use IEnumerable, it resets SelectedItem to first item in ComboBox.
         /// </summary>
-        public IList<RepoWrapper> Value => _latestTask?.IsCompleted ?? false ? _latestTask.Result : null;
+        public IList<Repo> Value => _latestTask?.IsCompleted ?? false ? _latestTask.Result : null;
 
         /// <summary>
         /// Returns the current repo list display option. Refer to <seealso cref="DisplayOptions"/>.

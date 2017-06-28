@@ -59,17 +59,17 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         }
 
         /// <summary>
-        /// Retrives the list of <seealso cref="RepoWrapper"/> under the project.
+        /// Retrives the list of <seealso cref="Repo"/> under the project.
         /// </summary>
-        public static async Task<IList<RepoWrapper>> GetCloudReposAsync(string projectId)
+        public static async Task<IList<Repo>> GetCloudReposAsync(string projectId)
         {
             projectId.ThrowIfNullOrEmpty(nameof(projectId));
             var csrDataSource = CreateCsrDataSource(projectId);
             if (csrDataSource == null)
             {
-                return new List<RepoWrapper>();
+                return new List<Repo>();
             }
-            return (await csrDataSource.ListReposAsync()).Select(x => new RepoWrapper(x)).ToList();
+            return await csrDataSource.ListReposAsync();
         }
 
         /// <summary>
