@@ -84,12 +84,12 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         }
 
         /// <summary>
-        /// Continues to show unconnected or connected view,
+        /// Continue on by showing unconnected or connected view,
         /// after it checks git is installed.
         /// </summary>
         public void OnGitInstallationCheckSuccess()
         {
-            ErrorHandlerUtils.HandleAsyncExceptions(() => InitializeGit(_teamExplorerService));
+            ErrorHandlerUtils.HandleAsyncExceptions(() => InitializeGitAsync(_teamExplorerService));
 
             _accountChangedHandler = (sender, e) => OnAccountChanged();
             CredentialsStore.Default.CurrentAccountChanged += _accountChangedHandler;
@@ -105,7 +105,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                 if (s_currentAccount != CredentialsStore.Default.CurrentAccount?.AccountName)
                 {
                     SetGitCredential(_teamExplorerService);
-                    // Continue nevertheless SetGitCredential succeeds or not.
+                    // Continue regardless of whether SetGitCredential succeeds or not.
 
                     _reposViewModel.Refresh();
                     s_currentAccount = CredentialsStore.Default.CurrentAccount?.AccountName;
@@ -125,7 +125,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
 
             if (!CsrGitSetupWarningViewModel.GitInstallationVerified)
             {
-                ErrorHandlerUtils.HandleAsyncExceptions(CheckGitInstallation);
+                ErrorHandlerUtils.HandleAsyncExceptions(CheckGitInstallationAsync);
             }
             else if (CredentialsStore.Default.CurrentAccount == null)
             {
@@ -133,6 +133,8 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             }
             else
             {
+                ErrorHandlerUtils.HandleAsyncExceptions(() => InitializeGitAsync(_teamExplorerService));
+
                 Content = _reposContent;
                 s_currentAccount = CredentialsStore.Default.CurrentAccount?.AccountName;
                 _reposViewModel.Refresh();
@@ -153,7 +155,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
 
             if (!CsrGitSetupWarningViewModel.GitInstallationVerified)
             {
-                ErrorHandlerUtils.HandleAsyncExceptions(CheckGitInstallation);
+                ErrorHandlerUtils.HandleAsyncExceptions(CheckGitInstallationAsync);
             }
             else
             {
@@ -178,16 +180,15 @@ namespace GoogleCloudExtension.CloudSourceRepositories
 
         #endregion
 
-        private async Task CheckGitInstallation()
-        {
-            await CsrGitSetupWarningViewModel.CheckInstallation();
-            if (!CsrGitSetupWarningViewModel.GitInstallationVerified)
+        private async Task CheckGitInstallationAsync()
+        {            
+            if (await _gitSetupViewModel.CheckInstallationAsync())
             {
-                Content = _gitSetupContent;
+                OnGitInstallationCheckSuccess();
             }
             else
             {
-                OnGitInstallationCheckSuccess();
+                Content = _gitSetupContent;
             }
         }
 
@@ -201,19 +202,19 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             Refresh();
         }
 
-        private static async Task<bool> InitializeGit(ITeamExplorerUtils teamExplorer)
+        private static async Task<bool> InitializeGitAsync(ITeamExplorerUtils teamExplorer)
         {
             if (s_gitInited)
             {
                 return true;
             }
 
-            return s_gitInited = (await SetUseHttpPath(teamExplorer)) && SetGitCredential(teamExplorer);
+            return s_gitInited = (await SetUseHttpPathAsync(teamExplorer)) && SetGitCredential(teamExplorer);
         }
 
-        private static async Task<bool> SetUseHttpPath(ITeamExplorerUtils teamExplorer)
+        private static async Task<bool> SetUseHttpPathAsync(ITeamExplorerUtils teamExplorer)
         {
-            bool ret = false;
+            bool ret;
             try
             {
                 await CsrGitUtils.SetUseHttpPathAsync();
@@ -225,9 +226,7 @@ namespace GoogleCloudExtension.CloudSourceRepositories
             }
             if (!ret)
             {
-                teamExplorer.ShowMessage(
-                    "Failed to initialize git. Check your Git for Windows installation. [Retry]",
-                    new ProtectedAsyncCommand(() => SetUseHttpPath(teamExplorer)));
+                teamExplorer.ShowMessage(Resources.GitInitilizationFailedMessage, null);
             }
             return ret;
         }
@@ -241,10 +240,8 @@ namespace GoogleCloudExtension.CloudSourceRepositories
                     CredentialsStore.Default.CurrentAccount.RefreshToken,
                     CsrGitUtils.StoreCredentialPathOption.UrlHost))
                 {
-                    teamExplorer.ShowMessage(
-                        "Failed to initialize git. Check your Git for Windows installation. [Retry]",
-                        new ProtectedCommand(() => SetGitCredential(teamExplorer)));
-                    return false;
+                    teamExplorer.ShowMessage(Resources.GitInitilizationFailedMessage, null);
+                    return s_gitInited = false;
                 }
             }
             return true;

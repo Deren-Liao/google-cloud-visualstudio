@@ -939,6 +939,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="CloudSourceRepositories\CsrGitSetupWarningContent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="CloudSourceRepositories\CsrReposContent.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -948,10 +952,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CloudSourceRepositories\CsrSectionStyles.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="CloudSourceRepositories\CsrGitSetupWarningContent.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

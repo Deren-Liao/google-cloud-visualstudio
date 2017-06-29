@@ -3733,7 +3733,25 @@ namespace GoogleCloudExtension {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Git Credential Manager for Windows (git-credeitnal-manager) is not installed correctly.
+        ///   Looks up a localized string similar to Google Cloud Source Repositories: Failed to initialize git. Fix your Git for Windows installation and refresh..
+        /// </summary>
+        public static string GitInitilizationFailedMessage {
+            get {
+                return ResourceManager.GetString("GitInitilizationFailedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verify again.
+        /// </summary>
+        public static string GitInstallationVerifyAgainCaption {
+            get {
+                return ResourceManager.GetString("GitInstallationVerifyAgainCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Git credential manager for Windows is not installed. Please install or re-install Git for Windows to fix the problem..
         /// </summary>
         public static string GitUtilsGitCredentialManagerNotInstalledMessage {
             get {

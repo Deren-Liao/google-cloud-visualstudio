@@ -9,7 +9,6 @@
              xmlns:ext="clr-namespace:GoogleCloudExtension"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             x:Name="_gitSetupContent"
              d:DataContext="{d:DesignInstance IsDesignTimeCreatable=false,Type=local:CsrGitSetupWarningViewModel}">
 
     <UserControl.Resources>
@@ -21,7 +20,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <StackPanel>
+    <StackPanel IsEnabled="{Binding IsEnabled}">
 
         <Image 
             HorizontalAlignment="Left" 
@@ -29,7 +28,7 @@
             Stretch="None"
             Source="{mp:ImageResource Theming/Resources/GCP_logo_horizontal.png}" />
 
-        <WrapPanel Orientation="Horizontal">
+        <DockPanel>
             <Image 
                 Margin="0,5,6,0"
                 HorizontalAlignment="Left" 
@@ -37,10 +36,11 @@
                 Stretch="None"
                 Source="{mp:ImageResource Theming/Resources/ic_error_red_14px.png}" />
 
-            <TextBlock Text="{Binding ErrorMessage}"
-                     Margin="0,5,0,0"
-                     Style="{StaticResource CommonTextStyle}"/>
-        </WrapPanel>
+            <TextBlock DockPanel.Dock="Right"
+                Text="{Binding ErrorMessage}"
+                Margin="0,5,0,0"
+                Style="{StaticResource CommonTextStyle}"/>
+        </DockPanel>
 
         <WrapPanel Orientation="Horizontal">
             <Button Style="{StaticResource SectionButtonStyle}" 
@@ -48,11 +48,12 @@
                 Command="{Binding InstallGitCommand}" 
                 Margin="0,5,20,0"
                 Content="{x:Static ext:Resources.GitUtilsGitInstallLinkCaption}" />
+
             <Button Style="{StaticResource SectionButtonStyle}" 
                 KeyboardNavigation.TabIndex="1" 
-                Command="{Binding TestCommand}" 
+                Command="{Binding VerifyCommand}" 
                 Margin="0,5,8,0"
-                Content="Verify again" />
+                Content="{x:Static ext:Resources.GitInstallationVerifyAgainCaption}" />
         </WrapPanel>
 
     </StackPanel>

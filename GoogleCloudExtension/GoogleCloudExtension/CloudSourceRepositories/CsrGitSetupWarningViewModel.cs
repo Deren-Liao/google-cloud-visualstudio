@@ -26,22 +26,31 @@ namespace GoogleCloudExtension.CloudSourceRepositories
     /// </summary>
     public class CsrGitSetupWarningViewModel : ViewModelBase
     {
-        private static string s_error;
-
         private readonly CsrSectionControlViewModel _parent;
-        private bool _isEnabled = false;
+        private bool _isEnabled = true;
+        private string _errorMessage;
 
-        public bool IsEnable
+        /// <summary>
+        /// Indicates if the git installation has been verified installed.
+        /// </summary>
+        public static bool GitInstallationVerified { get; private set; }
+
+        /// <summary>
+        /// Enable or disable the control.
+        /// </summary>
+        public bool IsEnabled
         {
             get { return _isEnabled; }
             private set { SetValueAndRaise(ref _isEnabled, value);  }
         }
 
-        public static bool GitInstallationVerified { get; private set; }
-
+        /// <summary>
+        /// The error message when git is not installed.
+        /// </summary>
         public string ErrorMessage
         {
-            get { return s_error; }
+            get { return _errorMessage; }
+            set { SetValueAndRaise(ref _errorMessage, value); }
         }
 
         /// <summary>
@@ -52,63 +61,61 @@ namespace GoogleCloudExtension.CloudSourceRepositories
         /// <summary>
         /// Respond to Test installation button
         /// </summary>
-        public ICommand TestCommand { get; }
+        public ICommand VerifyCommand { get; }
 
         public CsrGitSetupWarningViewModel(CsrSectionControlViewModel parent)
         {
             _parent = parent;
             InstallGitCommand = new ProtectedCommand(
                 () => Process.Start(ValidateGitDependencyHelper.GitInstallationLink));
-            TestCommand = new ProtectedAsyncCommand(OnTestRequest);
-        }
-
-        public async Task OnTestRequest()
-        {
-            IsEnable = false;
-            try
+            VerifyCommand = new ProtectedAsyncCommand(async () =>
             {
-                await CheckInstallation();
-                if (GitInstallationVerified)
+                if (await CheckInstallationAsync())
                 {
                     _parent.OnGitInstallationCheckSuccess();
                 }
-                else
-                {
-                    RaisePropertyChanged(nameof(ErrorMessage));
-                }
-            }
-            finally
-            {
-                IsEnable = true;
-            }
-
+            });
         }
 
-        public static async Task CheckInstallation()
+        /// <summary>
+        /// Check if Git for Windows dependency is installed properly.
+        /// Set ErrorMessage so that the error shows 
+        /// </summary>
+        /// <returns>
+        /// true: Verified git is installed.  false: git is not installed properly.
+        /// </returns>
+        public async Task<bool> CheckInstallationAsync()
         {
             if (GitInstallationVerified)
             {
-                return;
+                return true;
             }
 
             if (String.IsNullOrWhiteSpace(GitRepository.GetGitPath()))
             {
-                s_error = Resources.GitUtilsMissingGitErrorTitle;
-                return;
+                ErrorMessage = Resources.GitUtilsMissingGitErrorTitle;
+                return false;
             }
+
+            IsEnabled = false;
             try
             {
-                await GitRepository.GitCredentialManagerInstalled();
+                if (await GitRepository.IsGitCredentialManagerInstalledAsync())
+                {
+                    ErrorMessage = null;
+                    GitInstallationVerified = true;
+                }
+                else
+                {
+                    ErrorMessage = Resources.GitUtilsGitCredentialManagerNotInstalledMessage;
+                }
             }
-            catch (GitCommandException)
+            finally
             {
-                s_error = Resources.GitUtilsGitCredentialManagerNotInstalledMessage;
-                return;
+                IsEnabled = true;
             }
 
-            s_error = null;
-            GitInstallationVerified = true;
+            return GitInstallationVerified;
         }
-
     }
 }
