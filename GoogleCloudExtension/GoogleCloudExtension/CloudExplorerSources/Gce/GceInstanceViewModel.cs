@@ -115,7 +115,7 @@ namespace GoogleCloudExtension.CloudExplorerSources.Gce
             {
                 Instance = await _owner.DataSource.RefreshInstance(Instance);
             }
-            catch (DataSourceException ex)
+            catch (Exception ex) when (!ErrorHandlerUtils.IsCriticalException(ex))
             {
                 Debug.WriteLine($"RefreshInstanceState failed {ex}");
                 IsError = true;     // Set state to error
