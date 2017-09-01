@@ -97,6 +97,7 @@
     <Compile Include="ProjectTemplatesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VisualStudioWrapper.cs" />
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Templates.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
