@@ -703,6 +703,10 @@
       <HintPath>..\packages\Google.Apis.Clouderrorreporting.v1beta1.1.29.1.958\lib\net45\Google.Apis.Clouderrorreporting.v1beta1.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Google.Apis.CloudFunctions.v1beta2, Version=1.29.1.964, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.CloudFunctions.v1beta2.1.29.1.964\lib\net45\Google.Apis.CloudFunctions.v1beta2.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Google.Apis.CloudResourceManager.v1, Version=1.29.1.970, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.CloudResourceManager.v1.1.29.1.970\lib\net45\Google.Apis.CloudResourceManager.v1.dll</HintPath>
       <Private>True</Private>

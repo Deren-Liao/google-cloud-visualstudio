@@ -26,6 +26,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
+using Google.Apis.CloudFunctions.v1beta2.Data;
+
 namespace GoogleCloudExtension.CloudExplorerSources.Gae
 {
     /// <summary>
@@ -145,9 +147,23 @@ namespace GoogleCloudExtension.CloudExplorerSources.Gae
         {
             try
             {
+                {
+                    var ds = new GcfDataSource(
+                        CredentialsStore.Default.CurrentProjectId,
+                        CredentialsStore.Default.CurrentGoogleCredential,
+                        GoogleCloudExtensionPackage.ApplicationName);
+                    var results = await ds.ListFunctionsAsync("us-central1");
+                    foreach (var f in results)
+                    {
+                        Console.WriteLine($"{f.Name}");
+                    }
+                }
+
                 Debug.WriteLine("Loading list of services.");
                 _gaeApplication = _dataSource.Value.GetApplicationAsync();
                 IList<ServiceViewModel> services = await LoadServiceList();
+
+
 
                 Children.Clear();
                 foreach (var item in services)
